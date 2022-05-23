@@ -1,0 +1,6 @@
+[submodule "thirdparty/gnss-ins-sim"]
+	path = thirdparty/gnss-ins-sim
+	url = https://github.com/Aceinna/gnss-ins-sim.git
+[submodule "thirdparty/vio_data_simulation"]
+	path = thirdparty/vio_data_simulation
+	url = https://github.com/HeYijia/vio_data_simulation.git
