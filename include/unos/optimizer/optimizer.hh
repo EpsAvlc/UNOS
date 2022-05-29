@@ -2,6 +2,7 @@
 #define NALIO_OPTIMIZER_OPTIMIZER_HH__
 
 #include <Eigen/Core>
+#include <memory>
 
 #include "unos/cost_function/cost_function.hh"
 #include "unos/manifold/manifold.hh"
@@ -9,8 +10,9 @@
 namespace unos {
 class Optimizer {
  public:
-  virtual void init(const Manifold& init_val, const std::vector<const CostFunction::Ptr>& functions) = 0;
-  virtual Eigen::VectorXd calculateDx() = 0;
+  using Ptr = std::shared_ptr<Optimizer>;
+  virtual void init(const Manifold& init_val, const std::vector<CostFunction::Ptr>& functions) = 0;
+  virtual Manifold optimize() = 0;
 };
 }  // namespace unos
 

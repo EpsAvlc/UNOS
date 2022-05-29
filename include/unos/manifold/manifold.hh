@@ -13,14 +13,20 @@ class Manifold : public SubManifold {
 
   Manifold() {}
 
+  Manifold(const Manifold& rhs) {
+    rhs.copyTo(this);
+  }
+
+  Manifold(const Manifold&& rhs) {
+    rhs.copyTo(this);
+  }
+
   template <typename T, typename... ARGS>
-  Manifold(const T t, ARGS... arg) : dim_(0), dof_(0), type_id_(0) {
+  Manifold(const T t, ARGS... arg) : dim_(0), dof_(0), type_id_("") {
     construct(t, arg...);
   }
 
-  void operator=(const Manifold& rhs) {
-    rhs.copyTo(this);
-  }
+  void operator=(const Manifold& rhs) { rhs.copyTo(this); }
 
   void oplus(const Eigen::VectorXd& input) override {
     uint16_t ind = 0;
@@ -58,7 +64,7 @@ class Manifold : public SubManifold {
 
   uint16_t dim() const override { return dim_; }
   uint16_t dof() const override { return dof_; }
-  uint64_t type_id() const override { return type_id_; };
+  std::string type_id() const override { return type_id_; };
 
   void setZero() override {
     for (size_t si = 0; si < sub_manifolds_.size(); ++si) {
@@ -87,32 +93,39 @@ class Manifold : public SubManifold {
     target_derived->sub_manifolds_.clear();
     target_derived->sub_manifolds_.resize(sub_manifolds_.size());
     for (size_t si = 0; si < sub_manifolds_.size(); ++si) {
-      target_derived->sub_manifolds_[si] = createSubManifold(sub_manifolds_[si]->type_id());
+      target_derived->sub_manifolds_[si] =
+          createSubManifold(sub_manifolds_[si]->type_id());
       sub_manifolds_[si]->copyTo(target_derived->sub_manifolds_[si].get());
     }
   }
 
  private:
   template <typename T, typename... ARGS>
-  void construct(const T t, ARGS... arg) {
+  void construct(const T& t, ARGS... arg) {
     construct(t);
     construct(arg...);
   }
 
   template <typename T>
-  void construct(const T t) {
+  void construct(const T& t) {
     typename T::Ptr sub_manifold(new T(t));
     sub_manifolds_.push_back(sub_manifold);
     dof_ += sub_manifold->dof();
     dim_ += sub_manifold->dim();
-    type_id_ = (type_id_ << 4) | sub_manifold->type_id();
+    type_id_ += sub_manifold->type_id();
   }
+
 
   std::vector<SubManifold::Ptr> sub_manifolds_;
   uint16_t dim_;
   uint16_t dof_;
-  uint64_t type_id_;
+  std::string type_id_;
 };
+
+template <>
+void Manifold::construct(const Manifold& m) {
+  m.copyTo(this);
+}
 
 };  // namespace unos
 

@@ -3,9 +3,12 @@
 
 #include <array>
 #include <memory>
+#include <string>
 
 #include <Eigen/Core>
 #include <Eigen/Geometry>
+
+#include "unos/factory/factory.hh"
 
 namespace unos {
 class SubManifold {
@@ -18,7 +21,7 @@ class SubManifold {
   virtual uint16_t dof() const = 0;
   virtual void setZero() = 0;
   virtual Eigen::VectorXd coeffs() const = 0;
-  virtual uint64_t type_id() const = 0;
+  virtual std::string type_id() const = 0;
   virtual void copyTo(SubManifold*) const = 0;
 };
 
@@ -49,7 +52,7 @@ class SO3 : public SubManifold {
   }
   uint16_t dim() const { return 4; };
   uint16_t dof() const { return 3; };
-  uint64_t type_id() const override { return 1; };
+  std::string type_id() const override { return "SO3"; };
 
   void setZero() override { q_.setIdentity(); }
   Eigen::VectorXd coeffs() const override { return q_.coeffs(); }
@@ -99,15 +102,7 @@ class VecX : public SubManifold {
 
   uint16_t dim() const override { return DIM; };
   uint16_t dof() const override { return DIM; };
-  uint64_t type_id() const override {
-    if (DIM == 2) {
-      return 2;
-    } else if (DIM == 3) {
-      return 3;
-    } else {
-      return 4;
-    }
-  };
+  std::string type_id() const override { return "Vec" + std::to_string(DIM); };
 
   void setZero() override { s_.setZero(); }
   Eigen::VectorXd coeffs() const override { return s_; }
@@ -121,24 +116,18 @@ class VecX : public SubManifold {
   Eigen::Matrix<double, DIM, 1> s_;
 };
 
-using Vec3 = VecX<3>;
 
-SubManifold::Ptr createSubManifold(const uint16_t type_id) {
-  SubManifold::Ptr ret;
-  switch (type_id) {
-    case 1:
-      ret.reset(new SO3);
-      break;
-    case 2:
-      ret.reset(new VecX<2>);
-    case 3:
-      ret.reset(new VecX<3>);
-    default:
-      break;
-  }
-  return ret;
+SubManifold::Ptr createSubManifold(const std::string& type_id) {
+  return unos::Factory<SubManifold>::produce_shared(type_id);
 }
 
+using Vec1 = VecX<1>;
+using Vec2 = VecX<2>;
+using Vec3 = VecX<3>;
+REGISTER_UNOS(SubManifold, SO3, "SO3");
+REGISTER_UNOS(SubManifold, Vec1, "Vec1");
+REGISTER_UNOS(SubManifold, Vec2, "Vec2");
+REGISTER_UNOS(SubManifold, Vec3, "Vec3");
 }  // namespace unos
 
 #endif  // UNOS_MAINFOLD_MAINFOLD_HH__

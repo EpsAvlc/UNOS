@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 
-#include "unos/manifold/manifold.hh"
+#include "unos/unos.hh"
 
 TEST(UNOS, manifold) {
   unos::Manifold state{unos::SO3(), unos::Vec3()};
@@ -21,3 +21,21 @@ TEST(UNOS, manifold) {
   Eigen::VectorXd pert2 = state.boxminus(&init_state);
   EXPECT_TRUE(pert2.isApprox(perturbance));
 }
+
+class OptimizationTest : public ::testing::Test {
+ protected:
+  void SetUp() override { }
+
+ private:
+  //* Powell’s Function, see
+  // http://ceres-solver.org/nnls_tutorial.html#powell-s-function
+  class f1 : public unos::CostFunction {
+   public:
+    bool evaluate(const unos::Manifold& m, Eigen::VectorXd* residuals,
+                  Eigen::MatrixXd* jacobians) const override {
+    
+                  }
+  };
+
+  unos::Problem problem_;
+};

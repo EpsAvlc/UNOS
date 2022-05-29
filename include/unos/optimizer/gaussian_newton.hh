@@ -9,12 +9,12 @@ namespace unos {
 class GaussianNewton : public Optimizer {
  public:
   void init(const Manifold& init_val,
-            const std::vector<const CostFunction::Ptr>& functions) override {
+            const std::vector<CostFunction::Ptr>& functions) override {
     cost_functions_ = functions;
     val_ = init_val;
   }
 
-  Eigen::VectorXd calculateDx() override {
+  Manifold optimize() override {
     bool converged = false;
     uint16_t iter = 0;
     while (!converged && iter < max_iter_) {
@@ -36,12 +36,11 @@ class GaussianNewton : public Optimizer {
         converged = true;
       }
     }
-    Eigen::VectorXd ret = val_.boxminus(&init_val_);
-    return ret;
+    return val_;
   }
 
  private:
-  std::vector<const CostFunction::Ptr> cost_functions_;
+  std::vector<CostFunction::Ptr> cost_functions_;
   Manifold val_;
   Manifold init_val_;
   uint16_t max_iter_ = 10;
