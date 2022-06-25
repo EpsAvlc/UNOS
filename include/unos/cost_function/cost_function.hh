@@ -6,10 +6,11 @@
 #include "unos/manifold/manifold.hh"
 
 namespace unos {
+template <typename M>
 class CostFunction {
  public:
   using Ptr = std::shared_ptr<CostFunction>;
-  virtual bool evaluate(const Manifold& m, Eigen::VectorXd* residuals,
+  virtual bool evaluate(const M& m, Eigen::VectorXd* residuals,
                         Eigen::MatrixXd* jacobians) const = 0;
 };
 };  // namespace unos
