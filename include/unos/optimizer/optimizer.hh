@@ -8,14 +8,13 @@
 #include "unos/manifold/manifold.hh"
 
 namespace unos {
-template <typename M>
 class Optimizer {
  public:
   using Ptr = std::shared_ptr<Optimizer>;
-  virtual void init(
-      const M& init_val,
-      const std::vector<typename CostFunction<M>::Ptr>& functions) = 0;
-  virtual M optimize() = 0;
+  // virtual void init(
+  //     const M& init_val,
+  //     const std::vector<typename CostFunction::Ptr>& functions) = 0;
+  // virtual M optimize() = 0;
 };
 }  // namespace unos
 

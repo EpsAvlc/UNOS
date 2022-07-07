@@ -11,7 +11,8 @@ TEST(UNOS, manifold) {
   init_state.setZero();
   state.copyTo(&init_state);
 
-  Eigen::VectorXd perturbance(static_cast<int>(unos::Manifold<unos::SO3, unos::Vec3>::DOF));
+  Eigen::VectorXd perturbance(
+      static_cast<int>(unos::Manifold<unos::SO3, unos::Vec3>::DOF));
   for (size_t i = 0; i < state.DOF; ++i) {
     perturbance(i) = 0.01;
   }
@@ -60,9 +61,14 @@ TEST(UNOS, manifold) {
 //   unos::Problem problem_;
 // };
 
-class LSQCostFunction {};
+using LQManifold = unos::Manifold<unos::Vec3>;
+class LSQCostFunction : public unos::CostFunction<LQManifold> {
+ public:
+  bool evaluate(const LQManifold& m, Eigen::VectorXd* residuals,
+                Eigen::MatrixXd* jacobians) const {}
+};
 TEST(UNOS, least_square) {
-  using LQManifold = unos::Manifold<unos::Vec3>;
   LQManifold::Ptr abc(new LQManifold);
   unos::Problem<LQManifold> problem(abc);
+  // problem.addCostFunctions
 }

@@ -6,12 +6,16 @@
 #include "unos/manifold/manifold.hh"
 
 namespace unos {
-template <typename M>
 class CostFunction {
  public:
   using Ptr = std::shared_ptr<CostFunction>;
-  virtual bool evaluate(const M& m, Eigen::VectorXd* residuals,
-                        Eigen::MatrixXd* jacobians) const = 0;
+
+ protected:
+  void setNumResiduals(size_t num_residuals) {
+    num_residuals_ = num_residuals;
+  }
+
+  size_t num_residuals_;
 };
 };  // namespace unos
 

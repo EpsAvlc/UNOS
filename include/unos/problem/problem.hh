@@ -6,23 +6,20 @@
 #include "unos/optimizer/optimizer.hh"
 
 namespace unos {
-template <typename ManifoldT>
 class Problem {
  public:
-  using OptimizerT = Optimizer<ManifoldT>;
-  using CostFunctionT = CostFunction<ManifoldT>;
-  Problem(const typename ManifoldT::Ptr& manifold)
-      : iter_num_(1), manifold_(manifold) {}
+  Problem() : iter_num_(1) {}
 
-  void setManifold(typename ManifoldT::Ptr& manifold) {
+  template <typename Manifold>
+  void addManifold(typename Manifold::Ptr& manifold) {
     manifold_ = manifold;
   }
 
-  void addCostFunctions(const typename CostFunctionT::Ptr& cost_function) {
+  void addCostFunctions(const typename CostFunction::Ptr& cost_function) {
     cost_functions_.push_back(cost_function);
   }
 
-  void setOptimizer(const typename OptimizerT::Ptr& optimizer) {
+  void setOptimizer(const typename Optimizer::Ptr& optimizer) {
     optimizer_ = optimizer;
   }
 
@@ -36,7 +33,7 @@ class Problem {
  private:
   typename OptimizerT::Ptr optimizer_;
   typename ManifoldT::Ptr manifold_;
-  std::vector<typename CostFunctionT::Ptr> cost_functions_;
+  std::vector<typename CostFunction::Ptr> cost_functions_;
   uint16_t iter_num_;
 };
 };  // namespace unos

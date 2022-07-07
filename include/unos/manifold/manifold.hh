@@ -181,14 +181,6 @@ template <typename... SMs>
 inline Eigen::VectorXd Manifold<SMs...>::coeffs() const {
   Eigen::VectorXd ret(static_cast<int>(DIM));
   ret.setZero();
-  // uint16_t ind = 0;
-  // for (size_t si = 0; si < sub_manifolds_.size(); ++si) {
-  //   Eigen::VectorXd sub_coeff = sub_manifolds_[si]->coeffs();
-  //   for (size_t di = 0; di < sub_manifolds_[si]->DIM; ++di) {
-  //     ret(ind + di) = sub_coeff(di);
-  //   }
-  //   ind += sub_manifolds_[si]->DIM;
-  // }
   coeffs<0, 0, SMs...>(&ret);
   return ret;
 }
