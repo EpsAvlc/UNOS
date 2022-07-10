@@ -61,14 +61,43 @@ TEST(UNOS, manifold) {
 //   unos::Problem problem_;
 // };
 
-using LQManifold = unos::Manifold<unos::Vec3>;
-class LSQCostFunction : public unos::CostFunction<LQManifold> {
+// ax^2 +bx + c = 0
+// a = 1, b =2, c = 3
+using LSManifold = unos::Manifold<unos::Vec3>;
+class LSCostFunction : public unos::AnalyticCostFunction<3, 1> {
  public:
-  bool evaluate(const LQManifold& m, Eigen::VectorXd* residuals,
-                Eigen::MatrixXd* jacobians) const {}
+  LSCostFunction(double x, double y) : x_(x), y_(y) {}
+  bool evaluate(const double* m, double* residuals,
+                double** jacobians) const override {
+    double a = m[0];
+    double b = m[1];
+    double c = m[2];
+    residuals[0] = x_ * x_ * a + x_ * b + c;
+    if (jacobians) {
+      jacobians[0][0] = x_ * x_;
+      jacobians[0][1] = x_;
+      jacobians[0][2] = 1;
+    }
+    return true;
+  }
+
+ private:
+  double x_;
+  double y_;
 };
 TEST(UNOS, least_square) {
-  LQManifold::Ptr abc(new LQManifold);
-  unos::Problem<LQManifold> problem(abc);
-  // problem.addCostFunctions
+  LSManifold* abc{new LSManifold{0, 0, 0}};
+  unos::Problem problem;
+  // problem.setManifold(abc);
+
+  LSCostFunction* cost_func1 = new LSCostFunction(1, 6);
+  // problem.addResidualBlock(cost_func1);
+  LSCostFunction* cost_func2 = new LSCostFunction(2, 11);
+  // problem.addCostFunctions(cost_func2);
+  LSCostFunction* cost_func3 = new LSCostFunction(0, 3);
+  // problem.addCostFunctions(cost_func3);
+
+  problem.optimize();
+  
+  std::cout << "hello." << std::endl;
 }

@@ -9,13 +9,14 @@ namespace unos {
 class CostFunction {
  public:
   using Ptr = std::shared_ptr<CostFunction>;
+  virtual bool evaluate(const double* params, double* residual,
+                        double** jacobian) const {};
+
+  int getResidualSize() const { return res_size_; }
 
  protected:
-  void setNumResiduals(size_t num_residuals) {
-    num_residuals_ = num_residuals;
-  }
-
-  size_t num_residuals_;
+  int param_size_;
+  int res_size_;
 };
 };  // namespace unos
 

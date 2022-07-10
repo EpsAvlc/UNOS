@@ -37,6 +37,10 @@ class Manifold : public SubManifold {
 
   Manifold();
 
+  Manifold(const std::initializer_list<double>& init_list) {
+    set(init_list);
+  }
+
   void operator=(const Manifold& rhs);
 
   void oplus(const Eigen::VectorXd& input) override;

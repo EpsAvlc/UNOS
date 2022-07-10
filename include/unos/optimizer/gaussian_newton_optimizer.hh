@@ -6,22 +6,22 @@
 #include "unos/optimizer/optimizer.hh"
 
 namespace unos {
-class GaussianNewton : public Optimizer {
+class GaussianNewtonOptimizer : public Optimizer {
  public:
-  void init(const Manifold& init_val,
-            const std::vector<CostFunction::Ptr>& functions) override {
+  void init(double* init_val, const std::vector<CostFunction::Ptr>& functions,
+            const SubManifold* manifold = nullptr) {
     cost_functions_ = functions;
     val_ = init_val;
   }
 
-  Manifold optimize() override {
+  SubManifold* optimize() {
     bool converged = false;
     uint16_t iter = 0;
     while (!converged && iter < max_iter_) {
       ++iter;
-      Eigen::MatrixXd H(val_.dof(), val_.dof());
+      Eigen::MatrixXd H(val_->dof(), val_->dof());
       H.setZero();
-      Eigen::VectorXd g(val_.dof());
+      Eigen::VectorXd g(val_->dof());
       g.setZero();
       for (int ci = 0; ci < cost_functions_.size(); ++ci) {
         Eigen::VectorXd residual;
@@ -41,8 +41,7 @@ class GaussianNewton : public Optimizer {
 
  private:
   std::vector<CostFunction::Ptr> cost_functions_;
-  Manifold val_;
-  Manifold init_val_;
+  double* val_;
   uint16_t max_iter_ = 10;
 };
 }  // namespace unos

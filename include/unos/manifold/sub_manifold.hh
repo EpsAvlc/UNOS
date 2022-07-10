@@ -22,6 +22,7 @@ class SubManifold {
   virtual std::string type_id() const = 0;
   virtual void copyTo(SubManifold*) const = 0;
   virtual void set(const std::initializer_list<double>&) = 0;
+  // virtual void 
 };
 
 SubManifold::Ptr createSubManifold(const std::string& type_id) {

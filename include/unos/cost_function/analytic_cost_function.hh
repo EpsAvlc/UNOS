@@ -3,13 +3,9 @@
 
 #include "unos/cost_function/sized_cost_function.hh"
 namespace unos {
-template <typename M, size_t NRes>
-class AnalyticCostFunction : public SizeCostFunction<M, NRes> {
+template <size_t param_size, size_t NRes>
+class AnalyticCostFunction : public SizedCostFunction<param_size, NRes> {
  public:
-  virtual void evaluate(const M& manifold, double* residual, double** jacobian){
-
-  };
-
  private:
 };
 }  // namespace unos
