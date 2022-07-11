@@ -86,18 +86,19 @@ class LSCostFunction : public unos::AnalyticCostFunction<3, 1> {
   double y_;
 };
 TEST(UNOS, least_square) {
-  LSManifold* abc{new LSManifold{0, 0, 0}};
+  double param[] = {0, 0, 0};
   unos::Problem problem;
-  // problem.setManifold(abc);
+  problem.addParameterBlock(param, 3);
 
+  unos::HuberLossFunction* huber_lf = new unos::HuberLossFunction(0.1);
   LSCostFunction* cost_func1 = new LSCostFunction(1, 6);
-  // problem.addResidualBlock(cost_func1);
+  problem.addResidualBlock(cost_func1, huber_lf, param);
   LSCostFunction* cost_func2 = new LSCostFunction(2, 11);
-  // problem.addCostFunctions(cost_func2);
+  problem.addResidualBlock(cost_func2, huber_lf, param);
   LSCostFunction* cost_func3 = new LSCostFunction(0, 3);
-  // problem.addCostFunctions(cost_func3);
+  problem.addResidualBlock(cost_func3, huber_lf, param);
 
   problem.optimize();
-  
+
   std::cout << "hello." << std::endl;
 }
