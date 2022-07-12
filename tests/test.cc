@@ -72,7 +72,7 @@ class LSCostFunction : public unos::AnalyticCostFunction<3, 1> {
     double a = m[0];
     double b = m[1];
     double c = m[2];
-    residuals[0] = x_ * x_ * a + x_ * b + c;
+    residuals[0] = x_ * x_ * a + x_ * b + c - y_;
     if (jacobians) {
       jacobians[0][0] = x_ * x_;
       jacobians[0][1] = x_;
@@ -100,5 +100,5 @@ TEST(UNOS, least_square) {
 
   problem.optimize();
 
-  std::cout << "hello." << std::endl;
+  // std::cout << "hello." << std::endl;
 }

@@ -16,6 +16,14 @@ class ParameterBlock {
     return std::make_shared<ParameterBlock>(data, size, sub);
   };
 
+  int parameterSize() {
+    return size_;
+  }
+
+  double* mutableData() {
+    return data_;
+  }
+
  private:
   double* data_;
   int size_;
