@@ -11,10 +11,12 @@ namespace unos {
 class Optimizer {
  public:
   using Ptr = std::shared_ptr<Optimizer>;
-  // virtual void init(
-  //     const M& init_val,
-  //     const std::vector<typename CostFunction::Ptr>& functions) = 0;
+  struct Options {
+    int max_iteration_num;
+  };
+  virtual void init(const Options& options) = 0;
   // virtual M optimize() = 0;
+  virtual void optimize(){};
 };
 }  // namespace unos
 

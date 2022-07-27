@@ -14,6 +14,10 @@
 namespace unos {
 class Problem {
  public:
+  struct Options {
+    int max_iteration_num = 50;
+  };
+
   Problem() : iter_num_(1), total_parameter_num_(0), total_residual_num_(0) {}
 
   void addParameterBlock(double* parameters, int size,
@@ -44,11 +48,14 @@ class Problem {
   void optimize() {
     Eigen::MatrixXd jacobian;
     Eigen::VectorXd residual;
-    makeJacobian(&jacobian, &residual);
-    std::cout << "-----------Jacobian:----------" << std::endl;
-    std::cout << jacobian << std::endl;
-    std::cout << "-----------Residual:----------" << std::endl;
-    std::cout << residual << std::endl;
+    bool coveraged = false;
+    while (coveraged) {
+      makeJacobian(&jacobian, &residual);
+      std::cout << "-----------Jacobian:----------" << std::endl;
+      std::cout << jacobian << std::endl;
+      std::cout << "-----------Residual:----------" << std::endl;
+      std::cout << residual << std::endl;
+    }
   }
 
  private:
