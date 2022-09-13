@@ -1,14 +1,19 @@
 #ifndef UNOS_EVALUATOR_HH__
 #define UNOS_EVALUATOR_HH__
 
-#include "unos/cost_function/cost_function.hh"
-#include "unos/loss_function/loss_function.hh"
+#include "unos/problem/problem.hh"
+
+namespace unos {
 
 class Evaluator {
  public:
-  void init();
+  Evaluator(const std::shared_ptr<Problem>& problem_ptr);
+  bool evaluate(const double* initial_val, double* residuals,
+                double** jacobians);
+
  private:
-  
+  std::shared_ptr<Problem> problem_ptr_;
 };
+}  // namespace unos
 
 #endif  // NALIO_WS_EVALUATOR_HH__
