@@ -16,17 +16,17 @@ class ParameterBlock {
     return std::make_shared<ParameterBlock>(data, size, sub);
   };
 
-  int parameterSize() {
-    return size_;
-  }
+  int size() { return size_; }
 
-  double* mutableData() {
-    return data_;
-  }
+  double* mutableData() { return data_; }
+
+  void getState(double* state) { memcpy(state, data_, size_ * sizeof(data_)); }
+
+  double const* state() const { return data_; }
 
  private:
   double* data_;
-  int size_;
+  int     size_;
 };
 
 };      // namespace unos

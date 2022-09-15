@@ -31,8 +31,8 @@ class SO3 : public SubManifold {
     }
     q_ = q_ * exp(s);
   }
-  uint16_t dim() const { return 4; };
-  uint16_t dof() const { return 3; };
+  int dim() const { return 4; };
+  int dof() const { return 3; };
   std::string type_id() const override { return "SO3"; };
 
   void setZero() override { q_.setIdentity(); }

@@ -4,49 +4,43 @@
 #include <memory>
 #include <unordered_map>
 
-#include "unos/cost_function/cost_function.hh"
-#include "unos/loss_function/loss_function.hh"
-#include "unos/manifold/manifold.hh"
-#include "unos/optimizer/optimizer.hh"
-#include "unos/problem/parameter_block.hh"
-#include "unos/problem/residual_block.hh"
-#include "unos/utils/log_utils.hh"
-
+#include "unos/evaluator/evaluator.hh"
+#include "unos/problem/program.hh"
 namespace unos {
-class Problem : public std::enable_shared_from_this<Problem> {
+class Problem {
  public:
   struct Config {
     int max_iteration_num = 50;
   };
 
-  Problem(const Config& config);
+  Problem(const Config& config = Config());
 
   void addParameterBlock(double* parameters, int size,
-                         SubManifold* mandifold = nullptr);
+                         SubManifold* manifold = nullptr);
 
+  void addResidualBlock(const CostFunction*  cost_function,
+                        const LossFunction*  loss_function,
+                        double* const* const parameters,
+                        int                  num_parameter_blocks);
+
+  template <typename... Ts>
   void addResidualBlock(const CostFunction* cost_function,
-                        const LossFunction* loss_function, double* parameters);
-
-  const std::vector<typename ParameterBlock::Ptr>& parameterBlocks() const;
-
-  const std::vector<typename ResidualBlock::Ptr>& residualBlocks() const;
-
-  uint16_t totalResidualNum() const;
-
-  uint16_t totalParameterNum() const;
+                        const LossFunction* loss_function, double* x0,
+                        Ts*... xs) {
+    const std::array<double*, sizeof...(Ts) + 1> parameter_blocks{{x0, xs...}};
+    return addResidualBlock(cost_function, loss_function,
+                            parameter_blocks.data(),
+                            static_cast<int>(parameter_blocks.size()));
+  }
 
   void optimize();
 
  private:
-  void makeJacobian(Eigen::MatrixXd* jaco, Eigen::VectorXd* res);
+  Eigen::VectorXd makeState();
 
-  std::vector<typename ParameterBlock::Ptr> parameter_blocks_;
-  std::vector<typename ResidualBlock::Ptr> residual_blocks_;
-  uint16_t iter_num_;
-  std::unordered_map<double*, int> parameter_block_id_;
-  std::vector<int> parameter_block_ind_;
-  uint16_t total_residual_num_;
-  uint16_t total_parameter_num_;
+  std::shared_ptr<Program> program_ptr_;
+
+  std::shared_ptr<Evaluator> evaluator_ptr_;
 };
 };  // namespace unos
 

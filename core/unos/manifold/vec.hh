@@ -5,7 +5,7 @@
 #include "unos/manifold/sub_manifold.hh"
 
 namespace unos {
-template <uint16_t N>
+template <int N>
 class Vec : public SubManifold {
  public:
   using Ptr = std::shared_ptr<Vec<N>>;

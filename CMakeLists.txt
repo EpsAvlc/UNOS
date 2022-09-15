@@ -9,7 +9,7 @@ find_package(GTest REQUIRED)
 add_compile_options(-std=c++17)
 include_directories(
   /usr/include/eigen3
-  ${CMAKE_CURRENT_LIST_DIR}/include
+  ${CMAKE_CURRENT_LIST_DIR}/core
 )
 
 

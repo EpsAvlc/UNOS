@@ -1,18 +1,21 @@
 #ifndef UNOS_EVALUATOR_HH__
 #define UNOS_EVALUATOR_HH__
 
-#include "unos/problem/problem.hh"
+#include "unos/jacobian_writer/jacobian_writer.hh"
+#include "unos/problem/program.hh"
 
 namespace unos {
 
 class Evaluator {
  public:
-  Evaluator(const std::shared_ptr<Problem>& problem_ptr);
-  bool evaluate(const double* state, double* residuals,
-                double** jacobians);
+  Evaluator(const Program::Ptr& program_ptr);
+  bool evaluate(const double* state, double* residuals, double** jacobians);
 
  private:
-  std::shared_ptr<Problem> problem_ptr_;
+  double**            prepareJacobianSpace();
+  void                releaseJacobianSpace(double** jacobian);
+  Program::Ptr        program_ptr_;
+  JacobianWriter::Ptr jacobian_writer_;
 };
 }  // namespace unos
 

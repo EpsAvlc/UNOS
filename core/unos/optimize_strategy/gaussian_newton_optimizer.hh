@@ -16,7 +16,7 @@ class GaussianNewtonOptimizer : public Optimizer {
 
   SubManifold* optimize() {
     bool converged = false;
-    uint16_t iter = 0;
+    int iter = 0;
     while (!converged && iter < max_iter_) {
       ++iter;
       Eigen::MatrixXd H(val_->dof(), val_->dof());
@@ -42,7 +42,7 @@ class GaussianNewtonOptimizer : public Optimizer {
  private:
   std::vector<CostFunction::Ptr> cost_functions_;
   double* val_;
-  uint16_t max_iter_ = 10;
+  int max_iter_ = 10;
 };
 }  // namespace unos
 
