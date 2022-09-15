@@ -8,7 +8,7 @@ namespace unos {
 class Evaluator {
  public:
   Evaluator(const std::shared_ptr<Problem>& problem_ptr);
-  bool evaluate(const double* initial_val, double* residuals,
+  bool evaluate(const double* state, double* residuals,
                 double** jacobians);
 
  private:

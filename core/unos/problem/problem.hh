@@ -27,11 +27,18 @@ class Problem : public std::enable_shared_from_this<Problem> {
   void addResidualBlock(const CostFunction* cost_function,
                         const LossFunction* loss_function, double* parameters);
 
+  const std::vector<typename ParameterBlock::Ptr>& parameterBlocks() const;
+
+  const std::vector<typename ResidualBlock::Ptr>& residualBlocks() const;
+
+  uint16_t totalResidualNum() const;
+
+  uint16_t totalParameterNum() const;
+
   void optimize();
 
  private:
   void makeJacobian(Eigen::MatrixXd* jaco, Eigen::VectorXd* res);
-
 
   std::vector<typename ParameterBlock::Ptr> parameter_blocks_;
   std::vector<typename ResidualBlock::Ptr> residual_blocks_;

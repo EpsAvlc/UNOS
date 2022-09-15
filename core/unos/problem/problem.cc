@@ -20,7 +20,7 @@ void unos::Problem::addResidualBlock(const CostFunction* cost_function,
                                      const LossFunction* loss_function, double* parameters) {
   if (parameter_block_id_.count(parameters) == 0) {
     throw(std::invalid_argument(__STR_FUNCTION__ +
-                                " parameter has not been added."));
+                                " parameters has not been added."));
   }
   int param_block_id = parameter_block_id_[parameters];
   ResidualBlock::Ptr new_residual_block =
@@ -28,6 +28,18 @@ void unos::Problem::addResidualBlock(const CostFunction* cost_function,
   residual_blocks_.push_back(new_residual_block);
   total_residual_num_ += cost_function->getResidualSize();
 }
+
+const std::vector<typename ParameterBlock::Ptr>& unos::Problem::parameterBlocks() {
+  return parameter_blocks_;
+}
+
+const std::vector<typename ResidualBlock::Ptr>& unos::Problem::residualBlocks() {
+  return residual_blocks_;
+}
+
+uint16_t unos::Problem::totalResidualNum() { return total_residual_num_; }
+
+uint16_t unos::Problem::totalParameterNum() { return total_parameter_num_; }
 
 void unos::Problem::optimize() {
   Eigen::MatrixXd jacobian;
