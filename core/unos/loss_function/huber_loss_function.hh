@@ -1,5 +1,5 @@
-#ifndef UNOS_LOSS_FUNCTION_HUBER_LOSS_FUNCTION_H__
-#define UNOS_LOSS_FUNCTION_HUBER_LOSS_FUNCTION_H__
+#ifndef UNOS_LOSS_FUNCTION_HUBER_LOSS_FUNCTION_HH
+#define UNOS_LOSS_FUNCTION_HUBER_LOSS_FUNCTION_HH
 
 #include <cmath>
 #include <numeric>
@@ -28,4 +28,4 @@ class HuberLossFunction : public LossFunction {
 };
 };  // namespace unos
 
-#endif  // HUBER_LOSS_FUNCTION_HH
+#endif // UNOS_LOSS_FUNCTION_HUBER_LOSS_FUNCTION_HH

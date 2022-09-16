@@ -1,5 +1,5 @@
-#ifndef UNOS_MANIFOLD_MANIFOLD_HH__
-#define UNOS_MANIFOLD_MANIFOLD_HH__
+#ifndef UNOS_MANIFOLD_MANIFOLD_HH
+#define UNOS_MANIFOLD_MANIFOLD_HH
 
 #include <vector>
 
@@ -49,7 +49,7 @@ class Manifold : public SubManifold {
 
   template <size_t N>
   void set(const std::initializer_list<double>& init) {
-    static_assert(N < SubManifoldSize);
+    // static_assert(N < SubManifoldSize);
     sub_manifolds_[N]->set(init);
   }
 
@@ -119,7 +119,7 @@ inline Manifold<SMs...>::Manifold(const Manifold<SMs...>& rhs) {
 
 template <typename... SMs>
 inline Manifold<SMs...>::Manifold() : type_id_("") {
-  (construct<SMs>(), ...);
+  // (construct<SMs>(), ...);
 }
 
 template <typename... SMs>
@@ -204,4 +204,4 @@ inline void Manifold<SMs...>::copyTo(SubManifold* target) const {
 
 };  // namespace unos
 
-#endif  // UNOS_MANIFOLD_MANIFOLD_HH__
+#endif // UNOS_MANIFOLD_MANIFOLD_HH

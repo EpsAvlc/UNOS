@@ -1,14 +1,14 @@
 #include "unos/problem/problem.hh"
 #include <glog/logging.h>
 
-unos::Problem::Problem(const Config& config) {
+unos::Problem::Problem(const Config config) {
   program_ptr_.reset(new Program);
   evaluator_ptr_.reset(new Evaluator(program_ptr_));
 }
 
-void unos::Problem::addParameterBlock(double* parameters, int size,
-                                      SubManifold* manifold) {
-  program_ptr_->addParameterBlock(parameters, size, manifold);
+void unos::Problem::addParameterBlock(double* parameters, int size
+                                      /*,  manifold*/) {
+  program_ptr_->addParameterBlock(parameters, size /*, manifold*/);
 }
 
 void unos::Problem::addResidualBlock(const CostFunction*  cost_function,
@@ -24,8 +24,7 @@ void unos::Problem::optimize() {
   Eigen::VectorXd residual;
   bool            coveraged = false;
   while (!coveraged) {
-    
-    // evaluator_ptr_->evaluate()
+    evaluator_ptr_->evaluate()
     LOG(INFO) << "-----------Jacobian:----------";
     LOG(INFO) << jacobian;
     LOG(INFO) << "-----------Residual:----------";

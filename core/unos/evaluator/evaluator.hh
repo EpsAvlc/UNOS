@@ -1,8 +1,7 @@
-#ifndef UNOS_EVALUATOR_HH__
-#define UNOS_EVALUATOR_HH__
+#ifndef UNOS_EVALUATOR_EVALUATOR_HH
+#define UNOS_EVALUATOR_EVALUATOR_HH
 
 #include "unos/jacobian_writer/jacobian_writer.hh"
-#include "unos/problem/program.hh"
 
 namespace unos {
 
@@ -19,4 +18,4 @@ class Evaluator {
 };
 }  // namespace unos
 
-#endif  // NALIO_WS_EVALUATOR_HH__
+#endif // UNOS_EVALUATOR_EVALUATOR_HH

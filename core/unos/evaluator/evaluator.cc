@@ -22,18 +22,21 @@ bool Evaluator::evaluate(const double* state, double* residuals,
   // (TODO:caoming) not consider multiple thread.
   double** jacobian_data = prepareJacobianSpace();
 
+  std::unique_ptr<SparseMatrix> jacobian_matrix(
+      jacobian_writer_->createJacobian());
+
   for (size_t ri = 0; ri < residual_blocks.size(); ++ri) {
     std::vector<ParameterBlock::Ptr> res_param_block_ids =
         residual_blocks[ri]->parameterBlocks();
-    int res_block_size = residual_blocks[ri]->residualSize();
+    int res_block_size = residual_blocks[ri]->size();
 
     Eigen::VectorXd residual_part(res_block_size);
     residual_blocks[ri]->evaluate(residual_part.data(), jacobian_data);
     res.block(residual_block_ind, 0, res_block_size, 1) = residual_part;
 
-    residual_block_ind += residual_blocks[ri]->residualSize();
-    // TODO(caoming): not implement yet:
-    // jacobian_writer_->write(residual_blocks[ri], 10, jacobian_data);
+    residual_block_ind += residual_blocks[ri]->size();
+    jacobian_writer_->write(residual_blocks[ri], jacobian_data,
+                            jacobian_matrix.get());
   }
 
   releaseJacobianSpace(jacobian_data);

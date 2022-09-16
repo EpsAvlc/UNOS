@@ -1,5 +1,5 @@
-#ifndef SO3_HH
-#define SO3_HH
+#ifndef UNOS_MANIFOLD_SO3_HH
+#define UNOS_MANIFOLD_SO3_HH
 
 #include <cstdarg>
 #include "unos/manifold/sub_manifold.hh"
@@ -75,4 +75,4 @@ class SO3 : public SubManifold {
 REGISTER_UNOS(SubManifold, SO3, "SO3");
 }  // namespace unos
 
-#endif  // SO3_HH
+#endif // UNOS_MANIFOLD_SO3_HH

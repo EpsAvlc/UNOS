@@ -1,5 +1,5 @@
-#ifndef NALIO_OPTIMIZER_OPTIMIZER_HH__
-#define NALIO_OPTIMIZER_OPTIMIZER_HH__
+#ifndef UNOS_MINIMIZER_MINIMIZER_HH
+#define UNOS_MINIMIZER_MINIMIZER_HH
 
 #include <Eigen/Core>
 #include <memory>
@@ -8,9 +8,9 @@
 #include "unos/manifold/manifold.hh"
 
 namespace unos {
-class Optimizer {
+class Minimizer {
  public:
-  using Ptr = std::shared_ptr<Optimizer>;
+  using Ptr = std::shared_ptr<Minimizer>;
   struct Options {
     int max_iteration_num;
   };
@@ -20,4 +20,4 @@ class Optimizer {
 };
 }  // namespace unos
 
-#endif  // NALIO_OPTIMIZER_OPTIMIZER_HH__
+#endif // UNOS_MINIMIZER_MINIMIZER_HH

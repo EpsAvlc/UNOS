@@ -1,5 +1,5 @@
-#ifndef UNOS_MANIFOLD_VEC_HH__
-#define UNOS_MANIFOLD_VEC_HH__
+#ifndef UNOS_MANIFOLD_VEC_HH
+#define UNOS_MANIFOLD_VEC_HH
 
 #include <cstdarg>
 #include "unos/manifold/sub_manifold.hh"
@@ -55,4 +55,4 @@ REGISTER_UNOS(SubManifold, Vec2, "Vec2");
 REGISTER_UNOS(SubManifold, Vec3, "Vec3");
 }  // namespace unos
 
-#endif
+#endif // UNOS_MANIFOLD_VEC_HH

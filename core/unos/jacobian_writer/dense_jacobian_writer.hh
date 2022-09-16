@@ -1,5 +1,5 @@
-#ifndef UNOS_DENSE_JACOBIAN_WRITER_HH
-#define UNOS_DENSE_JACOBIAN_WRITER_HH
+#ifndef UNOS_JACOBIAN_WRITER_DENSE_JACOBIAN_WRITER_HH
+#define UNOS_JACOBIAN_WRITER_DENSE_JACOBIAN_WRITER_HH
 
 #include "unos/jacobian_writer/jacobian_writer.hh"
 
@@ -8,11 +8,11 @@ class DenseJacobianWriter : public JacobianWriter {
  public:
   using Ptr = std::shared_ptr<DenseJacobianWriter>;
   DenseJacobianWriter(const Program::Ptr& program) : JacobianWriter(program) {}
-  void write(const ResidualBlock::Ptr& residual_block_ptr,
-             const int residual_offset, double** jacobians) override {
-  
-  }
+
+  std::unique_ptr<SparseMatrix> createJacobian();
+  void write(const ResidualBlock::Ptr& residual_block_ptr, double** jacobians,
+             SparseMatrix* jacobian_matrix) override final;
 };
 }  // namespace unos
 
-#endif  // UNOS_DENSE_JACOBIAN_WRITER_HH
+#endif // UNOS_JACOBIAN_WRITER_DENSE_JACOBIAN_WRITER_HH

@@ -6,15 +6,15 @@
 
 // ax^2 +bx + c = 0
 // a = 1, b =2, c = 3
-using LSManifold = unos::Manifold<unos::Vec3>;
+// using LSManifold = unos::Manifold<unos::Vec3>;
 class LSCostFunction : public unos::AnalyticCostFunction<3, 1> {
  public:
   LSCostFunction(double x, double y) : x_(x), y_(y) {}
-  bool evaluate(const double* m, double* residuals,
+  bool evaluate(double const* const* m, double* residuals,
                 double** jacobians) const override {
-    double a     = m[0];
-    double b     = m[1];
-    double c     = m[2];
+    double a     = m[0][0];
+    double b     = m[0][1];
+    double c     = m[0][2];
     residuals[0] = x_ * x_ * a + x_ * b + c - y_;
     if (jacobians) {
       jacobians[0][0] = x_ * x_;
@@ -29,7 +29,7 @@ class LSCostFunction : public unos::AnalyticCostFunction<3, 1> {
   double y_;
 };
 TEST(UNOS, least_square) {
-  double        param[]          = {0, 0, 0};
+  double        param[] = {0, 0, 0};
   unos::Problem problem;
   problem.addParameterBlock(param, 3);
 

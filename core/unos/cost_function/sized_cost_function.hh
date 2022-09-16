@@ -1,5 +1,5 @@
-#ifndef UNOS_SIZED_COST_FUNCTION_HH
-#define UNOS_SIZED_COST_FUNCTION_HH
+#ifndef UNOS_COST_FUNCTION_SIZED_COST_FUNCTION_HH
+#define UNOS_COST_FUNCTION_SIZED_COST_FUNCTION_HH
 
 #include "unos/cost_function/cost_function.hh"
 // #include <cstd
@@ -18,4 +18,4 @@ class SizedCostFunction : public CostFunction {
 };
 };  // namespace unos
 
-#endif  // UNOS_SIZED_COST_FUNCTION_HH
+#endif // UNOS_COST_FUNCTION_SIZED_COST_FUNCTION_HH

@@ -2,23 +2,22 @@
 #define UNOS_PROBLME_PROGRAM_HH
 
 #include <memory>
+#include <unordered_map>
 #include "unos/cost_function/cost_function.hh"
 #include "unos/loss_function/loss_function.hh"
-#include "unos/manifold/manifold.hh"
-#include "unos/optimizer/optimizer.hh"
 #include "unos/problem/parameter_block.hh"
 #include "unos/problem/residual_block.hh"
 #include "unos/utils/log_utils.hh"
 
 namespace unos {
-class Program : public std::enable_shared_from_this<Program> {
+class Program {
  public:
   using Ptr = std::shared_ptr<Program>;
 
   Program();
 
-  void addParameterBlock(double* parameters, int size,
-                         SubManifold* mandifold = nullptr);
+  void addParameterBlock(double* parameters,
+                         int     size /*, SubManifold* mandifold = nullptr*/);
 
   void addResidualBlock(const CostFunction*  cost_function,
                         const LossFunction*  loss_function,
@@ -44,7 +43,6 @@ class Program : public std::enable_shared_from_this<Program> {
   std::vector<typename ResidualBlock::Ptr>  residual_blocks_;
   int                                       iter_num_;
   std::unordered_map<double*, int>          parameter_block_id_map_;
-  std::vector<int>                          parameter_block_ind_;
   int                                       num_residuals_;
   int                                       num_parameters_;
   int                                       max_jacobian_size;

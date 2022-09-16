@@ -1,5 +1,5 @@
-#ifndef UNOS_ANALYTIC_COST_FUNCTION_HH
-#define UNOS_ANALYTIC_COST_FUNCTION_HH
+#ifndef UNOS_COST_FUNCTION_ANALYTIC_COST_FUNCTION_HH
+#define UNOS_COST_FUNCTION_ANALYTIC_COST_FUNCTION_HH
 
 #include "unos/cost_function/sized_cost_function.hh"
 namespace unos {
@@ -10,4 +10,4 @@ class AnalyticCostFunction : public SizedCostFunction<param_size, NRes> {
 };
 }  // namespace unos
 
-#endif  // UNOS_ANALYTIC_COST_FUNCTION_HH
+#endif // UNOS_COST_FUNCTION_ANALYTIC_COST_FUNCTION_HH

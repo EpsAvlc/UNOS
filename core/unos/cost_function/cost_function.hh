@@ -1,9 +1,8 @@
-#ifndef NALIO_COST_FUNCTION_COST_FUNCTION_HH__
-#define NALIO_COST_FUNCTION_COST_FUNCTION_HH__
+#ifndef UNOS_COST_FUNCTION_COST_FUNCTION_HH
+#define UNOS_COST_FUNCTION_COST_FUNCTION_HH
 
 #include <Eigen/Core>
 #include <memory>
-#include "unos/manifold/manifold.hh"
 
 namespace unos {
 class CostFunction {
@@ -20,4 +19,4 @@ class CostFunction {
 };
 };  // namespace unos
 
-#endif  // NALIO_COST_FUNCTION_COST_FUNCTION_HH__
+#endif // UNOS_COST_FUNCTION_COST_FUNCTION_HH

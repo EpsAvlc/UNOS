@@ -1,5 +1,5 @@
-#ifndef UNOS_LOSS_FUNCTION_H__
-#define UNOS_LOSS_FUNCTION_H__
+#ifndef UNOS_LOSS_FUNCTION_LOSS_FUNCTION_HH
+#define UNOS_LOSS_FUNCTION_LOSS_FUNCTION_HH
 
 namespace unos {
 class LossFunction {
@@ -8,4 +8,4 @@ class LossFunction {
 };
 };  // namespace unos
 
-#endif  // LOSE_FUNCTION_HH
+#endif // UNOS_LOSS_FUNCTION_LOSS_FUNCTION_HH

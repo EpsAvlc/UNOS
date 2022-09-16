@@ -1,33 +1,36 @@
-#ifndef UNOS_PARAMETER_BLOCK_H__
-#define UNOS_PARAMETER_BLOCK_H__
+#ifndef UNOS_PROBLEM_PARAMETER_BLOCK_HH
+#define UNOS_PROBLEM_PARAMETER_BLOCK_HH
 
 #include <memory>
-#include <unos/manifold/sub_manifold.hh>
+// #include <unos/manifold/sub_manifold.hh>
 
 namespace unos {
 class ParameterBlock {
  public:
   using Ptr = std::shared_ptr<ParameterBlock>;
-  ParameterBlock(double* data, int size, SubManifold* sub = nullptr) {
-    data_ = data;
-    size_ = size;
-  }
-  static Ptr create(double* data, int size, SubManifold* sub = nullptr) {
-    return std::make_shared<ParameterBlock>(data, size, sub);
-  };
 
-  int size() { return size_; }
+  ParameterBlock(double* data, int size/*, SubManifold* sub = nullptr*/);
 
-  double* mutableData() { return data_; }
+  static Ptr create(double* data, int size/*, SubManifold* sub = nullptr*/);
 
-  void getState(double* state) { memcpy(state, data_, size_ * sizeof(data_)); }
+  int size();
 
-  double const* state() const { return data_; }
+  double* mutableData();
+
+  void getState(double* state);
+
+  double const* state() const;
+
+  int jacobianOffset() const;
+
+  void setJacobianOffset(const int jacobian_offset);
 
  private:
   double* data_;
   int     size_;
+  int     jacobian_offset_;
 };
 
 };      // namespace unos
-#endif  // PARAMETER_BLOCKS_HH
+
+#endif // UNOS_PROBLEM_PARAMETER_BLOCK_HH

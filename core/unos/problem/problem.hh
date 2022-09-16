@@ -5,18 +5,18 @@
 #include <unordered_map>
 
 #include "unos/evaluator/evaluator.hh"
-#include "unos/problem/program.hh"
 namespace unos {
 class Problem {
  public:
   struct Config {
+    Config() {}
     int max_iteration_num = 50;
   };
 
-  Problem(const Config& config = Config());
+  Problem(const Config config = Config());
 
-  void addParameterBlock(double* parameters, int size,
-                         SubManifold* manifold = nullptr);
+  void addParameterBlock(double* parameters, int size
+                         /*, SubManifold* manifold = nullptr*/);
 
   void addResidualBlock(const CostFunction*  cost_function,
                         const LossFunction*  loss_function,

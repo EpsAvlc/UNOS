@@ -1,5 +1,5 @@
-#ifndef UNOS_MAINFOLD_MAINFOLD_HH__
-#define UNOS_MAINFOLD_MAINFOLD_HH__
+#ifndef UNOS_MANIFOLD_SUB_MANIFOLD_HH
+#define UNOS_MANIFOLD_SUB_MANIFOLD_HH
 
 #include <array>
 #include <memory>
@@ -30,4 +30,4 @@ SubManifold::Ptr createSubManifold(const std::string& type_id) {
 }
 }  // namespace unos
 
-#endif  // UNOS_MAINFOLD_MAINFOLD_HH__
+#endif // UNOS_MANIFOLD_SUB_MANIFOLD_HH
