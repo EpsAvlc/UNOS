@@ -36,7 +36,7 @@ class Problem {
   void optimize();
 
  private:
-  Eigen::VectorXd makeState();
+  void preprocess();
 
   std::shared_ptr<Program> program_ptr_;
 

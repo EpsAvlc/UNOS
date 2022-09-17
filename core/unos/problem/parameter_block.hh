@@ -9,15 +9,17 @@ class ParameterBlock {
  public:
   using Ptr = std::shared_ptr<ParameterBlock>;
 
-  ParameterBlock(double* data, int size/*, SubManifold* sub = nullptr*/);
+  ParameterBlock(double* data, int size /*, SubManifold* sub = nullptr*/);
 
-  static Ptr create(double* data, int size/*, SubManifold* sub = nullptr*/);
+  static Ptr create(double* data, int size /*, SubManifold* sub = nullptr*/);
 
   int size();
 
   double* mutableData();
 
   void getState(double* state);
+
+  void setState(double const* state);
 
   double const* state() const;
 
@@ -31,6 +33,6 @@ class ParameterBlock {
   int     jacobian_offset_;
 };
 
-};      // namespace unos
+};  // namespace unos
 
-#endif // UNOS_PROBLEM_PARAMETER_BLOCK_HH
+#endif  // UNOS_PROBLEM_PARAMETER_BLOCK_HH

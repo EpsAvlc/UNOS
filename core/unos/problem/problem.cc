@@ -20,14 +20,21 @@ void unos::Problem::addResidualBlock(const CostFunction*  cost_function,
 }
 
 void unos::Problem::optimize() {
-  Eigen::MatrixXd jacobian;
-  Eigen::VectorXd residual;
-  bool            coveraged = false;
-  while (!coveraged) {
-    evaluator_ptr_->evaluate()
-    LOG(INFO) << "-----------Jacobian:----------";
-    LOG(INFO) << jacobian;
-    LOG(INFO) << "-----------Residual:----------";
-    LOG(INFO) << residual;
-  }
+  preprocess();
+  bool coveraged = false;
+  // while (!coveraged) {
+  double* state_data = new double[program_ptr_->numParameters()];
+  program_ptr_->parameterBlocksToStateVector(state_data);
+  double* residuals = new double[program_ptr_->numResiduals()];
+  evaluator_ptr_->evaluate(state_data, residuals,
+                           program_ptr_->mutableJacobian().get());
+  LOG(INFO) << "-----------Jacobian:----------";
+  LOG(INFO) << std::endl << program_ptr_->Jacobian().toDenseMatrix();
+  LOG(INFO) << "-----------Residual:----------";
+  // LOG(INFO) << residual;
+  // }
+}
+
+void unos::Problem::preprocess() {
+  program_ptr_->mutableJacobian() = evaluator_ptr_->createJacobian();
 }

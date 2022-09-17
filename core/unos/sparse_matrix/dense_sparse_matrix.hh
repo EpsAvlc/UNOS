@@ -7,12 +7,14 @@
 namespace unos {
 class DenseSparseMatrix : public SparseMatrix {
  public:
-  DenseSparseMatrix(Eigen::MatrixXd m) : m_(std::move(m)) {}
-  Eigen::MatrixXd* mutable_matrix() { return &m_; }
+  DenseSparseMatrix(const Eigen::MatrixXd& m) : m_(m) {}
+  inline Eigen::MatrixXd* mutable_matrix() { return &m_; }
+  inline Eigen::MatrixXd  toDenseMatrix() override final { return m_; };
 
  private:
   Eigen::MatrixXd m_;
 };
+
 }  // namespace unos
 
 #endif  // UNOS_SPARSE_MATRIX_DENSE_SPARSE_MATRIX_HH

@@ -28,7 +28,8 @@ class LSCostFunction : public unos::AnalyticCostFunction<3, 1> {
   double x_;
   double y_;
 };
-TEST(UNOS, least_square) {
+// TEST(UNOS, least_square) {
+int main() {
   double        param[] = {0, 0, 0};
   unos::Problem problem;
   problem.addParameterBlock(param, 3);
@@ -42,7 +43,6 @@ TEST(UNOS, least_square) {
   problem.addResidualBlock(cost_func3, huber_lf, param);
 
   problem.optimize();
-
   // std::cout << "hello." << std::endl;
 }
 

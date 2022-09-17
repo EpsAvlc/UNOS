@@ -33,4 +33,6 @@ target_link_libraries(
   glog
 )
 
-gtest_discover_tests(${PROJECT_NAME}_problem_test)
+add_test(NAME ${PROJECT_NAME}_problem_test COMMAND ${PROJECT_NAME}_problem_test)
+
+# gtest_discover_tests(${PROJECT_NAME}_problem_test)

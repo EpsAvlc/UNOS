@@ -7,6 +7,7 @@
 #include "unos/loss_function/loss_function.hh"
 #include "unos/problem/parameter_block.hh"
 #include "unos/problem/residual_block.hh"
+#include "unos/sparse_matrix/sparse_matrix.hh"
 #include "unos/utils/log_utils.hh"
 
 namespace unos {
@@ -38,14 +39,21 @@ class Program {
 
   void parameterBlocksToStateVector(double* state_vector) const;
 
+  void stateVectorToParameterBlocks(double const* state_vector) const;
+
+  SparseMatrix::UniquePtr& mutableJacobian() { return jacobian_; }
+
+  SparseMatrix& Jacobian() const { return *jacobian_; }
+
  private:
-  std::vector<typename ParameterBlock::Ptr> parameter_blocks_;
-  std::vector<typename ResidualBlock::Ptr>  residual_blocks_;
   int                                       iter_num_;
-  std::unordered_map<double*, int>          parameter_block_id_map_;
   int                                       num_residuals_;
   int                                       num_parameters_;
   int                                       max_jacobian_size;
+  SparseMatrix::UniquePtr                   jacobian_;
+  std::unordered_map<double*, int>          parameter_block_id_map_;
+  std::vector<typename ParameterBlock::Ptr> parameter_blocks_;
+  std::vector<typename ResidualBlock::Ptr>  residual_blocks_;
 };
 };  // namespace unos
 

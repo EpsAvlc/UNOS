@@ -8,7 +8,9 @@ namespace unos {
 class Evaluator {
  public:
   Evaluator(const Program::Ptr& program_ptr);
-  bool evaluate(const double* state, double* residuals, double** jacobians);
+  SparseMatrix::UniquePtr createJacobian();
+  bool                    evaluate(const double* state, double* residuals,
+                                   SparseMatrix* jacobians);
 
  private:
   double**            prepareJacobianSpace();
@@ -18,4 +20,4 @@ class Evaluator {
 };
 }  // namespace unos
 
-#endif // UNOS_EVALUATOR_EVALUATOR_HH
+#endif  // UNOS_EVALUATOR_EVALUATOR_HH

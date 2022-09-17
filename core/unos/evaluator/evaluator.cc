@@ -7,8 +7,14 @@ Evaluator::Evaluator(const std::shared_ptr<Program>& program_ptr)
       JacobianWriter::create(program_ptr_, JacobianWriter::Type::DENSE);
 }
 
+SparseMatrix::UniquePtr Evaluator::createJacobian() {
+  return jacobian_writer_->createJacobian();
+}
+
 bool Evaluator::evaluate(const double* state, double* residuals,
-                         double** jacobians) {
+                         SparseMatrix* jacobians) {
+  program_ptr_->stateVectorToParameterBlocks(state);
+
   int num_residuals  = program_ptr_->numResiduals();
   int num_parameters = program_ptr_->numParameters();
 
@@ -22,9 +28,6 @@ bool Evaluator::evaluate(const double* state, double* residuals,
   // (TODO:caoming) not consider multiple thread.
   double** jacobian_data = prepareJacobianSpace();
 
-  std::unique_ptr<SparseMatrix> jacobian_matrix(
-      jacobian_writer_->createJacobian());
-
   for (size_t ri = 0; ri < residual_blocks.size(); ++ri) {
     std::vector<ParameterBlock::Ptr> res_param_block_ids =
         residual_blocks[ri]->parameterBlocks();
@@ -36,7 +39,7 @@ bool Evaluator::evaluate(const double* state, double* residuals,
 
     residual_block_ind += residual_blocks[ri]->size();
     jacobian_writer_->write(residual_blocks[ri], jacobian_data,
-                            jacobian_matrix.get());
+                            program_ptr_->mutableJacobian().get());
   }
 
   releaseJacobianSpace(jacobian_data);

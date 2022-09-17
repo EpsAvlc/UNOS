@@ -7,7 +7,7 @@ void Program::addParameterBlock(double* parameters, int size
                                 /*, SubManifold* mandifold*/) {
   // TODO(caoming) : duplicate parameters check;
   ParameterBlock::Ptr new_parameter_block =
-      ParameterBlock::create(parameters, size/*, nullptr*/);
+      ParameterBlock::create(parameters, size /*, nullptr*/);
   new_parameter_block->setJacobianOffset(num_parameters_);
   parameter_blocks_.push_back(new_parameter_block);
   parameter_block_id_map_.insert(
@@ -59,6 +59,13 @@ int Program::maxJacobianSize() const { return max_jacobian_size; }
 void Program::parameterBlocksToStateVector(double* state_vector) const {
   for (auto& parameter_block_ptr : parameter_blocks_) {
     parameter_block_ptr->getState(state_vector);
+    state_vector += parameter_block_ptr->size();
+  }
+}
+
+void Program::stateVectorToParameterBlocks(double const* state_vector) const {
+  for (auto& parameter_block_ptr : parameter_blocks_) {
+    parameter_block_ptr->setState(state_vector);
     state_vector += parameter_block_ptr->size();
   }
 }

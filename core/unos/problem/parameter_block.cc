@@ -21,6 +21,10 @@ void ParameterBlock::getState(double* state) {
   memcpy(state, data_, size_ * sizeof(data_));
 }
 
+void ParameterBlock::setState(double const* state) {
+  memcpy(data_, state, size_ * sizeof(data_));
+}
+
 double const* ParameterBlock::state() const { return data_; }
 
 int ParameterBlock::jacobianOffset() const { return jacobian_offset_; }
