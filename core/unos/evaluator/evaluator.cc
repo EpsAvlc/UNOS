@@ -18,12 +18,13 @@ bool Evaluator::evaluate(const double* state, double* residuals,
   int num_residuals  = program_ptr_->numResiduals();
   int num_parameters = program_ptr_->numParameters();
 
-  Eigen::Map<Eigen::VectorXd> res(residuals, num_residuals);
 
   auto& residual_blocks     = program_ptr_->residualBlocks();
   auto& parameter_blocks    = program_ptr_->parameterBlocks();
   int   residual_block_ind  = 0;
   int   parameter_block_ind = 0;
+
+  Eigen::Map<Eigen::VectorXd> res(residuals, num_residuals);
 
   // (TODO:caoming) not consider multiple thread.
   double** jacobian_data = prepareJacobianSpace();

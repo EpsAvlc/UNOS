@@ -7,6 +7,7 @@ namespace unos {
 
 class Evaluator {
  public:
+  using Ptr = std::shared_ptr<Evaluator>;
   Evaluator(const Program::Ptr& program_ptr);
   SparseMatrix::UniquePtr createJacobian();
   bool                    evaluate(const double* state, double* residuals,
