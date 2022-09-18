@@ -10,9 +10,13 @@ class TrustRegionStrategy {
   using UniquePtr = std::unique_ptr<TrustRegionStrategy>;
   enum Type { LevenbergMarquart };
 
-  virtual void init(const SparseMatrix::UniquePtr& jacobian);
-  virtual void ComputeStep(const SparseMatrix::UniquePtr& jacobian,
-                           const double* residuals, double* step) = 0;
+  struct Summary {
+    bool success;
+  };
+
+  virtual void    init(const SparseMatrix::UniquePtr& jacobian) = 0;
+  virtual Summary computeStep(const SparseMatrix::UniquePtr& jacobian,
+                              const double* residuals, double* step) = 0;
 
   static TrustRegionStrategy::UniquePtr create(const Type& type);
 

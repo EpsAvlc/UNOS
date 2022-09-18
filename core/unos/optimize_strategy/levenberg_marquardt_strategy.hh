@@ -11,8 +11,9 @@ class LevenbergMarquardtStratege final : public TrustRegionStrategy {
 
   void init(const SparseMatrix::UniquePtr& jacobian) override final;
 
-  void ComputeStep(const SparseMatrix::UniquePtr& jacobian,
-                   const double* residuals, double* step) override final;
+  TrustRegionStrategy::Summary computeStep(
+      const SparseMatrix::UniquePtr& jacobian, const double* residuals,
+      double* step) override final;
 
  private:
   void   initMu(const SparseMatrix::UniquePtr& jacobian);

@@ -1,5 +1,7 @@
 #include "unos/optimize_strategy/levenberg_marquardt_strategy.hh"
 
+#include <Eigen/Dense>
+
 namespace unos {
 
 LevenbergMarquardtStratege::LevenbergMarquardtStratege()
@@ -14,9 +16,23 @@ void LevenbergMarquardtStratege::init(const SparseMatrix::UniquePtr& jacobian) {
   initMu(jacobian);
 }
 
-void LevenbergMarquardtStratege::ComputeStep(
+TrustRegionStrategy::Summary LevenbergMarquardtStratege::computeStep(
     const SparseMatrix::UniquePtr& jacobian, const double* residuals,
-    double* step) {}
+    double* step) {
+  TrustRegionStrategy::Summary summary;
+
+  Eigen::MatrixXd dense_jaco_matrix = jacobian->toDenseMatrix();
+  int             parameter_size    = dense_jaco_matrix.cols();
+  int             jacobian_size     = dense_jaco_matrix.rows();
+  Eigen::Map<const Eigen::VectorXd> residuals_vec(residuals, jacobian_size);
+
+  Eigen::Map<Eigen::VectorXd> h_lm(step, parameter_size);
+  h_lm = (dense_jaco_matrix.transpose() * dense_jaco_matrix)
+             .householderQr()
+             .solve(-dense_jaco_matrix.transpose() * residuals_vec);
+  summary.success = true;
+  return summary;
+}
 
 void LevenbergMarquardtStratege::initMu(
     const SparseMatrix::UniquePtr& jacobian) {

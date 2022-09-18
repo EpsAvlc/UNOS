@@ -3,7 +3,7 @@
 
 #include "unos/minimizer/minimizer.hh"
 #include "unos/optimize_strategy/trust_region_strategy.hh"
-#include "unos/problem/program.hh"
+// #include "unos/problem/program.hh"
 
 namespace unos {
 class TrustRegionMinimizer : public Minimizer {
@@ -22,7 +22,7 @@ class TrustRegionMinimizer : public Minimizer {
  private:
   void iterationZero();
 
-  int                            iter_num = 0;
+  int                            iter_num = 20;
   Program::Ptr                   program_ptr_;
   TrustRegionStrategy::UniquePtr strategy_ptr_;
   Evaluator::Ptr                 evalutor_ptr_;

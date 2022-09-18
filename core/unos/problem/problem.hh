@@ -5,7 +5,8 @@
 #include <unordered_map>
 
 #include "unos/evaluator/evaluator.hh"
-// #include "unos/"
+#include "unos/minimizer/minimizer.hh"
+
 namespace unos {
 class Problem {
  public:
@@ -39,12 +40,9 @@ class Problem {
  private:
   void preprocess();
 
-  std::shared_ptr<Program> program_ptr_;
-
-  std::shared_ptr<Evaluator> evaluator_ptr_;
-
-  
-
+  Program::Ptr   program_ptr_;
+  Evaluator::Ptr evaluator_ptr_;
+  Minimizer::Ptr minimizer_ptr_;
 };
 };  // namespace unos
 

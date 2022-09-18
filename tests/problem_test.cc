@@ -28,8 +28,7 @@ class LSCostFunction : public unos::AnalyticCostFunction<3, 1> {
   double x_;
   double y_;
 };
-// TEST(UNOS, least_square) {
-int main() {
+TEST(UNOS, least_square) {
   double        param[] = {0, 0, 0};
   unos::Problem problem;
   problem.addParameterBlock(param, 3);
@@ -43,7 +42,10 @@ int main() {
   problem.addResidualBlock(cost_func3, huber_lf, param);
 
   problem.optimize();
-  // std::cout << "hello." << std::endl;
+
+  Eigen::Vector3d true_resolution(1, 2, 3);
+  Eigen::Vector3d parameter_vec{param};
+  EXPECT_TRUE(true_resolution.isApprox(parameter_vec));
 }
 
 // class OptimizationTest : public ::testing::Test {

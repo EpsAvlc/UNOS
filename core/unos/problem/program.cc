@@ -1,7 +1,8 @@
 #include "unos/problem/program.hh"
 
 namespace unos {
-Program::Program() : max_jacobian_size(0) {}
+Program::Program()
+    : max_jacobian_size(0), num_residuals_(0), num_parameters_(0) {}
 
 void Program::addParameterBlock(double* parameters, int size
                                 /*, SubManifold* mandifold*/) {
