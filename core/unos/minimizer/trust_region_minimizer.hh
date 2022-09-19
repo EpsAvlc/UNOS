@@ -22,11 +22,12 @@ class TrustRegionMinimizer : public Minimizer {
  private:
   void iterationZero();
 
-  bool isStepValid();
+  bool isStepValid(const Eigen::VectorXd& delta_x);
 
   int                            iter_num_     = 0;
   int                            max_iter_num_ = 0;
   double                         sigma_2_      = 1e-5;
+  double                         rho_          = 0;
   Program::Ptr                   program_ptr_;
   TrustRegionStrategy::UniquePtr strategy_ptr_;
   Evaluator::Ptr                 evalutor_ptr_;

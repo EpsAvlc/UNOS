@@ -18,7 +18,6 @@ bool Evaluator::evaluate(const double* state, double* residuals,
   int num_residuals  = program_ptr_->numResiduals();
   int num_parameters = program_ptr_->numParameters();
 
-
   auto& residual_blocks     = program_ptr_->residualBlocks();
   auto& parameter_blocks    = program_ptr_->parameterBlocks();
   int   residual_block_ind  = 0;
@@ -26,7 +25,7 @@ bool Evaluator::evaluate(const double* state, double* residuals,
 
   Eigen::Map<Eigen::VectorXd> res(residuals, num_residuals);
 
-  // (TODO:caoming) not consider multiple thread.
+  // TODO(caoming): not consider multiple thread.
   double** jacobian_data = prepareJacobianSpace();
 
   for (size_t ri = 0; ri < residual_blocks.size(); ++ri) {
@@ -39,8 +38,9 @@ bool Evaluator::evaluate(const double* state, double* residuals,
     res.block(residual_block_ind, 0, res_block_size, 1) = residual_part;
 
     residual_block_ind += residual_blocks[ri]->size();
-    jacobian_writer_->write(residual_blocks[ri], jacobian_data,
-                            program_ptr_->mutableJacobian().get());
+    if (jacobians) {
+      jacobian_writer_->write(residual_blocks[ri], jacobian_data, jacobians);
+    }
   }
 
   releaseJacobianSpace(jacobian_data);

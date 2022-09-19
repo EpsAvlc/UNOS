@@ -15,11 +15,18 @@ class LevenbergMarquardtStratege final : public TrustRegionStrategy {
       const SparseMatrix::UniquePtr& jacobian, const double* residuals,
       double* step) override final;
 
-  bool isStepValid(const Eigen::VectorXd& prev_jaco, const Eigen::VectorXd& curr_jaco, const Eigen::VectorXd& );
+  bool isStepValid(const Eigen::VectorXd& prev_jaco,
+                   const Eigen::VectorXd& curr_jaco, const Eigen::VectorXd&);
+
+  void acceptStep(const double rho) override;
+
+  void refuseStep(const double rho) override;
+
  private:
   void   initMu(const SparseMatrix::UniquePtr& jacobian);
   double mu_;
   double tau_;
+  double v_;
   int    max_iter_;
 };
 }  // namespace unos

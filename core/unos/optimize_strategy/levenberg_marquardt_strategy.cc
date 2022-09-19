@@ -10,6 +10,7 @@ LevenbergMarquardtStratege::LevenbergMarquardtStratege()
   but as a rule of thumb, one should use a small value, eg tau =1e-6 if x0 is
   believed to be a good approximation to x¤. Otherwise, use tau =1e-3 or even
   tau =1.*/
+      v_(2),
       max_iter_(50) {}
 
 void LevenbergMarquardtStratege::init(const SparseMatrix::UniquePtr& jacobian) {
@@ -32,6 +33,16 @@ TrustRegionStrategy::Summary LevenbergMarquardtStratege::computeStep(
              .solve(-dense_jaco_matrix.transpose() * residuals_vec);
   summary.success = true;
   return summary;
+}
+
+void LevenbergMarquardtStratege::acceptStep(const double rho) {
+  mu_ = mu_ * std::max(0.33, 1 - pow((2 * rho - 1), 3));
+  v_  = 2;
+}
+
+void LevenbergMarquardtStratege::refuseStep(const double rho) {
+  mu_ = mu_ * v_;
+  v_ *= 2;
 }
 
 void LevenbergMarquardtStratege::initMu(

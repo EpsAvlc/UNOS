@@ -1,5 +1,6 @@
 #include "trust_region_minimizer.hh"
 #include <glog/logging.h>
+#include <iostream>
 
 namespace unos {
 
@@ -18,7 +19,7 @@ void TrustRegionMinimizer::minimize(const Options& options,
   init(options, parameters);
 
   TerminateCondition terminate_condition;
-  Eigen::VectorXd    h_lm(program_ptr_->numParameters());
+  Eigen::VectorXd    delta_x(program_ptr_->numParameters());
   while (!isTerminated(&terminate_condition)) {
     ++iter_num_;
     Eigen::VectorXd residuals(program_ptr_->numResiduals());
@@ -26,16 +27,22 @@ void TrustRegionMinimizer::minimize(const Options& options,
                             program_ptr_->mutableJacobian().get());
 
     strategy_ptr_->computeStep(program_ptr_->mutableJacobian(),
-                               residuals.data(), h_lm.data());
+                               residuals.data(), delta_x.data());
     // LOG(INFO) << "delta x: " << delta_x.transpose() << std::endl;
-    if (h_lm.norm() <= sigma_2_ * (x_.norm() + sigma_2_)) {
-      // TODO: Modify termiante condition
+    if (delta_x.norm() <= sigma_2_ * (x_.norm() + sigma_2_)) {
+      // TODO(caoming): Modify termiante condition
       break;
     } else {
-      Eigen::VectorXd x_tmp = x_ + h_lm;
+      if (isStepValid(delta_x)) {
+        x_ = x_ + delta_x;
+        strategy_ptr_->acceptStep(rho_);
+      } else {
+        strategy_ptr_->refuseStep(rho_);
+      }
+      // Eigen::VectorXd x_tmp = x_ + h_lm;
     }
-
   }
+  return;
 }
 
 bool TrustRegionMinimizer::isTerminated(
@@ -54,7 +61,23 @@ void TrustRegionMinimizer::iterationZero() {
   strategy_ptr_->init(program_ptr_->mutableJacobian());
 }
 
-bool TrustRegionMinimizer::isStepValid() {
-  
+bool TrustRegionMinimizer::isStepValid(const Eigen::VectorXd& delta_x) {
+  Eigen::VectorXd f_x(program_ptr_->numResiduals());
+  evalutor_ptr_->evaluate(x_.data(), f_x.data(),
+                          program_ptr_->mutableJacobian().get());
+
+  Eigen::MatrixXd J           = program_ptr_->Jacobian().toDenseMatrix();
+  Eigen::VectorXd candidate_x = x_ + delta_x;
+  Eigen::VectorXd f_x_new(program_ptr_->numResiduals());
+  evalutor_ptr_->evaluate(candidate_x.data(), f_x_new.data(), nullptr);
+
+  // L(0) - L(h_lm) = -h_lm^T J^T f - 0.5 * h_lm^T J ^T J h_lm
+  Eigen::VectorXd denominator =
+      -2 * delta_x.transpose() * J.transpose() * f_x -
+      delta_x.transpose() * J.transpose() * J * delta_x;
+
+  rho_ = (f_x.squaredNorm() - f_x_new.squaredNorm()) / denominator.norm();
+
+  return rho_ > 1e-3;
 }
 }  // namespace unos

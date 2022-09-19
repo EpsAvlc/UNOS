@@ -14,9 +14,14 @@ class TrustRegionStrategy {
     bool success;
   };
 
-  virtual void    init(const SparseMatrix::UniquePtr& jacobian) = 0;
+  virtual void init(const SparseMatrix::UniquePtr& jacobian) = 0;
+
   virtual Summary computeStep(const SparseMatrix::UniquePtr& jacobian,
                               const double* residuals, double* step) = 0;
+
+  virtual void acceptStep(const double rho) = 0;
+
+  virtual void refuseStep(const double rho) = 0;
 
   static TrustRegionStrategy::UniquePtr create(const Type& type);
 
