@@ -15,6 +15,7 @@ class LevenbergMarquardtStratege final : public TrustRegionStrategy {
       const SparseMatrix::UniquePtr& jacobian, const double* residuals,
       double* step) override final;
 
+  bool isStepValid(const Eigen::VectorXd& prev_jaco, const Eigen::VectorXd& curr_jaco, const Eigen::VectorXd& );
  private:
   void   initMu(const SparseMatrix::UniquePtr& jacobian);
   double mu_;

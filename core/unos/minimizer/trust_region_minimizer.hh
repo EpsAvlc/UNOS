@@ -17,12 +17,16 @@ class TrustRegionMinimizer : public Minimizer {
 
   void minimize(const Options& options, double* parameters) override final;
 
-  bool isTerminated(const TerminateCondition* terminate_condition);
+  bool isTerminated(TerminateCondition* terminate_condition);
 
  private:
   void iterationZero();
 
-  int                            iter_num = 20;
+  bool isStepValid();
+
+  int                            iter_num_     = 0;
+  int                            max_iter_num_ = 0;
+  double                         sigma_2_      = 1e-5;
   Program::Ptr                   program_ptr_;
   TrustRegionStrategy::UniquePtr strategy_ptr_;
   Evaluator::Ptr                 evalutor_ptr_;
