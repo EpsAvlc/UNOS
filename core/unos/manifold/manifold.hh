@@ -119,7 +119,7 @@ inline Manifold<SMs...>::Manifold(const Manifold<SMs...>& rhs) {
 
 template <typename... SMs>
 inline Manifold<SMs...>::Manifold() : type_id_("") {
-  // (construct<SMs>(), ...);
+  (construct<SMs>(), ...);
 }
 
 template <typename... SMs>

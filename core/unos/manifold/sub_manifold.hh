@@ -25,9 +25,7 @@ class SubManifold {
   // virtual void 
 };
 
-SubManifold::Ptr createSubManifold(const std::string& type_id) {
-  return unos::Factory<SubManifold>::produce_shared(type_id);
-}
+SubManifold::Ptr createSubManifold(const std::string& type_id);
 }  // namespace unos
 
 #endif // UNOS_MANIFOLD_SUB_MANIFOLD_HH
