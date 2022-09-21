@@ -11,6 +11,7 @@ find_package(GTest REQUIRED)
 include_directories(
   /usr/include/eigen3
   ${CMAKE_CURRENT_LIST_DIR}/core
+  ${CMAKE_CURRENT_LIST_DIR}
 )
 
 add_library(${PROJECT_NAME}_CORE
