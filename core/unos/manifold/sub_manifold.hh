@@ -13,19 +13,18 @@
 namespace unos {
 class SubManifold {
  public:
+  enum : int { DIM = 4, DOF = 3 };
   using Ptr = std::shared_ptr<SubManifold>;
-  virtual void boxplus(const Eigen::VectorXd& s) = 0;
-  virtual Eigen::VectorXd boxminus(const SubManifold* s) const = 0;
-  virtual void oplus(const Eigen::VectorXd& i) = 0;
-  virtual void setZero() = 0;
-  virtual Eigen::VectorXd coeffs() const = 0;
-  virtual std::string type_id() const = 0;
-  virtual void copyTo(SubManifold*) const = 0;
-  virtual void set(const std::initializer_list<double>&) = 0;
-  // virtual void 
+
+  virtual void        boxplus(double const* const x, double const* const y,
+                              double* x_plus_y) const     = 0;
+  virtual void        oplus(double const* const x, double const* const delta_x,
+                            double* x_plus_delta_x) const = 0;
+  virtual std::string typeID() const                     = 0;
+  // virtual void
 };
 
 SubManifold::Ptr createSubManifold(const std::string& type_id);
 }  // namespace unos
 
-#endif // UNOS_MANIFOLD_SUB_MANIFOLD_HH
+#endif  // UNOS_MANIFOLD_SUB_MANIFOLD_HH

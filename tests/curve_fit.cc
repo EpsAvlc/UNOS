@@ -7,7 +7,7 @@
 // ax^2 +bx + c = 0
 // a = 1, b =2, c = 3
 // using LSManifold = unos::Manifold<unos::Vec3>;
-class LSCostFunction : public unos::AnalyticCostFunction<3, 1> {
+class LSCostFunction : public unos::SizedCostFunction<3, 1> {
  public:
   LSCostFunction(double x, double y) : x_(x), y_(y) {}
   bool evaluate(double const* const* m, double* residuals,

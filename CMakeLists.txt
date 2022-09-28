@@ -8,10 +8,12 @@ set(CMAKE_BUILD_TYPE "DEBUG")
 file(GLOB_RECURSE ${PROJECT_NAME}_CORE_FILES "${CMAKE_CURRENT_LIST_DIR}/core/*.cc")
 
 find_package(GTest REQUIRED)
+find_package(Ceres REQUIRED)
 include_directories(
-  /usr/include/eigen3
+  /usr/local/include/eigen3
   ${CMAKE_CURRENT_LIST_DIR}/core
   ${CMAKE_CURRENT_LIST_DIR}
+  ${CERES_INCLUDE_DIRS}
 )
 
 add_library(${PROJECT_NAME}_CORE
@@ -31,6 +33,7 @@ target_link_libraries(
   pthread
   ${PROJECT_NAME}_CORE
   glog
+  ${CERES_LIBRARIES}
 )
 
 gtest_discover_tests(${PROJECT_NAME}_test)

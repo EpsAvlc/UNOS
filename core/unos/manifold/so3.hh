@@ -10,69 +10,47 @@ class SO3 : public SubManifold {
   enum : int { DIM = 4, DOF = 3 };
   using Ptr = std::shared_ptr<SO3>;
 
-  void boxplus(const Eigen::VectorXd& s) override {
-    if (s.size() != 4) {
-      throw(std::logic_error("Dismatch paramter in SO3. Input has size: " +
-                             std::to_string(s.size())));
+  void boxplus(double const* const x, double const* const y,
+               double* x_plus_y) const override {
+    Eigen::Map<const Eigen::Quaterniond> q_x(x);
+    Eigen::Map<const Eigen::Quaterniond> q_y(y);
+    Eigen::Map<Eigen::Quaterniond>       q_x_plus_q_y(x_plus_y);
+    q_x_plus_q_y = q_x * q_y;
+  }
+
+  void oplus(double const* const x, double const* const delta,
+             double* x_plus_delta) const override {
+    const double norm_delta = std::sqrt(
+        delta[0] * delta[0] + delta[1] * delta[1] + delta[2] * delta[2]);
+
+    if (norm_delta == 0.0) {
+      for (int i = 0; i < 4; ++i) {
+        x_plus_delta[i] = x[i];
+      }
+      return;
     }
-    Eigen::Vector4d coeff = s;
-    q_ = q_ * Eigen::Quaterniond(coeff);
+
+    const double       sin_delta_by_delta = (std::sin(norm_delta) / norm_delta);
+    Eigen::Quaterniond q_delta(
+        std::cos(norm_delta), sin_delta_by_delta * delta[0],
+        sin_delta_by_delta * delta[1], sin_delta_by_delta * delta[2]);
+
+    Eigen::Map<const Eigen::Quaterniond> q_x(x);
+    Eigen::Map<Eigen::Quaterniond>       q_x_plus_delta(x_plus_delta);
+    // Note: delta is added on the left side.
+    q_x_plus_delta = q_delta * q_x;
   }
 
-  Eigen::VectorXd boxminus(const SubManifold* rhs) const override {
-    const SO3* rhs_derived = dynamic_cast<const SO3*>(rhs);
-    return log(rhs_derived->q_.conjugate() * this->q_);
-  }
+  int dim() const { return DIM; };
+  int dof() const { return DOF; };
 
-  void oplus(const Eigen::VectorXd& s) override {
-    if (s.size() != 3) {
-      throw(std::logic_error("Dismatch paramter in SO3. Input has size: " +
-                             std::to_string(s.size())));
-    }
-    q_ = q_ * exp(s);
-  }
-  int dim() const { return 4; };
-  int dof() const { return 3; };
-  std::string type_id() const override { return "SO3"; };
-
-  void setZero() override { q_.setIdentity(); }
-  Eigen::VectorXd coeffs() const override { return q_.coeffs(); }
-
-  void copyTo(SubManifold* target) const override {
-    SO3* target_derived = dynamic_cast<SO3*>(target);
-    target_derived->q_ = q_;
-  }
-
-  void set(const std::initializer_list<double>& init) override {
-    if (init.size() != 4) {
-      throw(std::invalid_argument("input dim is different with SO3 dim!"));
-    }
-    int ind = 0;
-    for (auto iter = init.begin(); iter != init.end(); ++iter) {
-      q_.matrix()(ind) = *iter;
-      ++ind;
-    }
-  }
+  std::string typeID() const override { return "SO3"; };
 
  private:
-  static Eigen::Quaterniond exp(const Eigen::Vector3d& s) {
-    Eigen::Quaterniond ret;
-    double norm = s.norm();
-    ret.vec() = sin(norm / 2) / norm * s;
-    ret.w() = cos(norm / 2);
-
-    return ret;
-  }
-
-  static Eigen::Vector3d log(const Eigen::Quaterniond& q) {
-    double phi = atan2(q.vec().norm(), q.w()) * 2;
-    Eigen::Vector3d n = q.vec() / sin(phi / 2);
-    return phi * n;
-  }
-
-  Eigen::Quaterniond q_;
 };
+
 REGISTER_UNOS(SubManifold, SO3, "SO3");
+
 }  // namespace unos
 
-#endif // UNOS_MANIFOLD_SO3_HH
+#endif  // UNOS_MANIFOLD_SO3_HH
