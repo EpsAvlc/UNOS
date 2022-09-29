@@ -22,6 +22,12 @@ class Vec : public SubManifold {
     boxplus(x, delta_x, x_plus_delta_x);
   }
 
+  void oplusJacobian(double const* const x, double* jacobian) const override {
+    Eigen::Map<const Eigen::Quaterniond>                         q_x(x);
+    Eigen::Map<Eigen::Matrix<double, DIM, DOF, Eigen::RowMajor>> jaco_mat(
+        jacobian);
+    jaco_mat.setIdentity();
+  }
   std::string typeID() const override { return "Vec" + std::to_string(N); };
 };
 

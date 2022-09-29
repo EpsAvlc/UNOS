@@ -41,6 +41,17 @@ class SO3 : public SubManifold {
     q_x_plus_delta = q_delta * q_x;
   }
 
+  void oplusJacobian(double const* const x, double* jacobian) const override {
+    Eigen::Map<const Eigen::Quaterniond>                     q_x(x);
+    Eigen::Map<Eigen::Matrix<double, DIM, DOF, Eigen::RowMajor>> jaco_mat(jacobian);
+    // clang-format off
+    jaco_mat <<  q_x.w(),  q_x.z(), -q_x.y(),
+                -q_x.z(),  q_x.w(),  q_x.x(),
+                 q_x.y(), -q_x.x(),  q_x.w(),
+                -q_x.x(), -q_x.y(), -q_x.z();
+    // clang-format on
+  }
+
   int dim() const { return DIM; };
   int dof() const { return DOF; };
 
