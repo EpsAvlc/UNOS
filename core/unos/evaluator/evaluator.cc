@@ -15,8 +15,8 @@ bool Evaluator::evaluate(const double* state, double* residuals,
                          SparseMatrix* jacobians) {
   program_ptr_->stateVectorToParameterBlocks(state);
 
-  int num_residuals  = program_ptr_->numResiduals();
-  int num_parameters = program_ptr_->numParameters();
+  int num_residuals      = program_ptr_->numResiduals();
+  int num_parameters_dof = program_ptr_->numParametersDOF();
 
   auto& residual_blocks     = program_ptr_->residualBlocks();
   auto& parameter_blocks    = program_ptr_->parameterBlocks();
@@ -45,6 +45,23 @@ bool Evaluator::evaluate(const double* state, double* residuals,
 
   releaseJacobianSpace(jacobian_data);
   return true;
+}
+
+void Evaluator::plus(double* x, double* delta, double* x_plus_delta) {
+  int num_paramter_blocks = program_ptr_->numParameterBlocks();
+  for (int i = 0; i < num_paramter_blocks; ++i) {
+    const ParameterBlock::Ptr& curr_paramter_block =
+        program_ptr_->parameterBlocks()[i];
+    if (curr_paramter_block->getManifold()) {
+      curr_paramter_block->getManifold()->oplus(x, delta, x_plus_delta);
+    } else {
+      for (int pi = 0; pi < program_ptr_->parameterBlocks()[i]->dim(); ++pi) {
+        x_plus_delta[pi] = x[pi] + delta[pi];
+      }
+    }
+    x += curr_paramter_block->dim();
+    delta += curr_paramter_block->dof();
+  }
 }
 
 double** Evaluator::prepareJacobianSpace() {

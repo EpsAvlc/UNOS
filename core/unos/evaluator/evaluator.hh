@@ -8,10 +8,15 @@ namespace unos {
 class Evaluator {
  public:
   using Ptr = std::shared_ptr<Evaluator>;
+
   Evaluator(const Program::Ptr& program_ptr);
+
   SparseMatrix::UniquePtr createJacobian();
-  bool                    evaluate(const double* state, double* residuals,
-                                   SparseMatrix* jacobians);
+
+  bool evaluate(const double* state, double* residuals,
+                SparseMatrix* jacobians);
+
+  void plus(double* x, double* delta, double* x_plus_delta);
 
  private:
   double**            prepareJacobianSpace();

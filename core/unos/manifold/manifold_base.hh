@@ -11,10 +11,10 @@
 #include "unos/factory/factory.hh"
 
 namespace unos {
-class SubManifold {
+class ManifoldBase {
  public:
-  enum : int { DIM = 4, DOF = 3 };
-  using Ptr = std::shared_ptr<SubManifold>;
+  enum : int { DIM = 0, DOF = 0 };
+  using Ptr = std::shared_ptr<ManifoldBase>;
 
   virtual void boxplus(double const* const x, double const* const y,
                        double* x_plus_y) const = 0;
@@ -24,11 +24,15 @@ class SubManifold {
 
   virtual void oplusJacobian(double const* const x, double* jacobian) const = 0;
 
+  virtual int dof() const = 0;
+
+  virtual int dim() const = 0;
+
   virtual std::string typeID() const = 0;
   // virtual void
 };
 
-SubManifold::Ptr createSubManifold(const std::string& type_id);
+ManifoldBase::Ptr createSubManifold(const std::string& type_id);
 }  // namespace unos
 
 #endif  // UNOS_MANIFOLD_SUB_MANIFOLD_HH

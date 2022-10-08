@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include "unos/cost_function/cost_function.hh"
 #include "unos/loss_function/loss_function.hh"
+#include "unos/manifold/manifold_base.hh"
 #include "unos/problem/parameter_block.hh"
 #include "unos/problem/residual_block.hh"
 #include "unos/sparse_matrix/sparse_matrix.hh"
@@ -17,8 +18,8 @@ class Program {
 
   Program();
 
-  void addParameterBlock(double* parameters,
-                         int     size /*, SubManifold* mandifold = nullptr*/);
+  void addParameterBlock(double* parameters, int size,
+                         ManifoldBase* manifold = nullptr);
 
   void addResidualBlock(const CostFunction*  cost_function,
                         const LossFunction*  loss_function,
@@ -31,11 +32,15 @@ class Program {
 
   int numResiduals() const;
 
-  int numParameters() const;
+  int numParametersDIM() const;
+
+  int numParametersDOF() const;
 
   int numParameterBlocks() const;
 
   int maxJacobianSize() const;
+
+  void setParameterBlockConstant();
 
   void parameterBlocksToStateVector(double* state_vector) const;
 
@@ -48,8 +53,9 @@ class Program {
  private:
   int                                       iter_num_;
   int                                       num_residuals_;
-  int                                       num_parameters_;
-  int                                       max_jacobian_size;
+  int                                       num_parameters_dof_;
+  int                                       num_parameters_dim_;
+  int                                       max_jacobian_size_;
   SparseMatrix::UniquePtr                   jacobian_;
   std::unordered_map<double*, int>          parameter_block_id_map_;
   std::vector<typename ParameterBlock::Ptr> parameter_blocks_;

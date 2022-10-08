@@ -2,10 +2,10 @@
 #define UNOS_MANIFOLD_SO3_HH
 
 #include <cstdarg>
-#include "unos/manifold/sub_manifold.hh"
+#include "unos/manifold/manifold_base.hh"
 
 namespace unos {
-class SO3 : public SubManifold {
+class SO3 : public ManifoldBase {
  public:
   enum : int { DIM = 4, DOF = 3 };
   using Ptr = std::shared_ptr<SO3>;
@@ -42,8 +42,9 @@ class SO3 : public SubManifold {
   }
 
   void oplusJacobian(double const* const x, double* jacobian) const override {
-    Eigen::Map<const Eigen::Quaterniond>                     q_x(x);
-    Eigen::Map<Eigen::Matrix<double, DIM, DOF, Eigen::RowMajor>> jaco_mat(jacobian);
+    Eigen::Map<const Eigen::Quaterniond>                         q_x(x);
+    Eigen::Map<Eigen::Matrix<double, DIM, DOF, Eigen::RowMajor>> jaco_mat(
+        jacobian);
     // clang-format off
     jaco_mat <<  q_x.w(),  q_x.z(), -q_x.y(),
                 -q_x.z(),  q_x.w(),  q_x.x(),
@@ -52,15 +53,16 @@ class SO3 : public SubManifold {
     // clang-format on
   }
 
-  int dim() const { return DIM; };
-  int dof() const { return DOF; };
+  int dof() const override { return DOF; }
+
+  int dim() const override { return DIM; }
 
   std::string typeID() const override { return "SO3"; };
 
  private:
 };
 
-REGISTER_UNOS(SubManifold, SO3, "SO3");
+REGISTER_UNOS(ManifoldBase, SO3, "SO3");
 
 }  // namespace unos
 

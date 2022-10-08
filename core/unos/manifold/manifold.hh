@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "unos/manifold/sub_manifold.hh"
+#include "unos/manifold/manifold_base.hh"
 
 namespace unos {
 
@@ -21,7 +21,7 @@ struct ManifoldHelper<SM> {
 };
 
 template <typename... SMs>
-class Manifold : public SubManifold {
+class Manifold : public ManifoldBase {
  public:
   using Ptr = std::shared_ptr<Manifold>;
 
@@ -44,12 +44,17 @@ class Manifold : public SubManifold {
   }
 
   void oplusJacobian(double const* const x, double* jacobian) const override {
-    Eigen::Map<Eigen::Matrix<double, DIM, DOF, Eigen::RowMajor>> jaco_mat(jacobian);
+    Eigen::Map<Eigen::Matrix<double, DIM, DOF, Eigen::RowMajor>> jaco_mat(
+        jacobian);
     jaco_mat.setZero();
     oplusJacobian<0, 0, 0, SMs...>(x, jacobian);
   }
 
   std::string typeID() const override { return type_id_; };
+
+  int dof() const override { return DOF; } 
+
+  int dim() const override { return DIM; }
 
  private:
   template <typename T>
@@ -97,8 +102,8 @@ class Manifold : public SubManifold {
   void boxplus(double const* const x, double const* const y,
                double* x_plus_y) const {}
 
-  std::vector<SubManifold::Ptr> sub_manifolds_;
-  std::string                   type_id_;
+  std::vector<ManifoldBase::Ptr> sub_manifolds_;
+  std::string                    type_id_;
 };
 
 };  // namespace unos

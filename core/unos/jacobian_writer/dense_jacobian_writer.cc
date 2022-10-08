@@ -6,7 +6,7 @@ namespace unos {
 
 std::unique_ptr<SparseMatrix> DenseJacobianWriter::createJacobian() {
   return std::make_unique<DenseSparseMatrix>(Eigen::MatrixXd(
-      program_ptr_->numResiduals(), program_ptr_->numParameters()));
+      program_ptr_->numResiduals(), program_ptr_->numParametersDOF()));
 }
 
 void DenseJacobianWriter::write(const ResidualBlock::Ptr& residual_block_ptr,
@@ -20,14 +20,14 @@ void DenseJacobianWriter::write(const ResidualBlock::Ptr& residual_block_ptr,
   for (size_t pi = 0; pi < residual_block_ptr->parameterBlocks().size(); ++pi) {
     const ParameterBlock::Ptr& parameter_block_ptr =
         residual_block_ptr->parameterBlocks()[pi];
-    int                         parameter_size = parameter_block_ptr->size();
+    int                         parameter_size = parameter_block_ptr->dof();
     Eigen::Map<Eigen::MatrixXd> jaco_ref(jacobians[pi], residual_size,
                                          parameter_size);
 
     jaco_matrix_eigen->block(residual_block_ptr->jacobianOffset(),
                              parameter_block_ptr->jacobianOffset(),
                              residual_block_ptr->size(),
-                             parameter_block_ptr->size()) = jaco_ref;
+                             parameter_block_ptr->dof()) = jaco_ref;
   }
 }
 

@@ -3,17 +3,16 @@
 
 namespace unos {
 
-ParameterBlock::ParameterBlock(double* data, int size /*, SubManifold* sub*/) {
-  data_ = data;
-  size_ = size;
+ParameterBlock::ParameterBlock(double* data, int size, ManifoldBase* manifold) {
+  data_     = data;
+  size_     = size;
+  manifold_ = manifold;
 }
 
-ParameterBlock::Ptr ParameterBlock::create(double* data,
-                                           int     size /*, SubManifold sub*/) {
-  return std::make_shared<ParameterBlock>(data, size /*, sub*/);
+ParameterBlock::Ptr ParameterBlock::create(double* data, int size,
+                                           ManifoldBase* manifold) {
+  return std::make_shared<ParameterBlock>(data, size, manifold);
 };
-
-int ParameterBlock::size() { return size_; }
 
 double* ParameterBlock::mutableData() { return data_; }
 

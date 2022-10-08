@@ -28,6 +28,7 @@ class LSCostFunction : public unos::SizedCostFunction<3, 1> {
   double x_;
   double y_;
 };
+
 TEST(UNOS, least_square) {
   double        param[] = {0, 0, 0};
   unos::Problem problem;

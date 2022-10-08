@@ -2,11 +2,11 @@
 #define UNOS_MANIFOLD_VEC_HH
 
 #include <cstdarg>
-#include "unos/manifold/sub_manifold.hh"
+#include "unos/manifold/manifold_base.hh"
 
 namespace unos {
 template <int N>
-class Vec : public SubManifold {
+class Vec : public ManifoldBase {
  public:
   using Ptr = std::shared_ptr<Vec<N>>;
   enum : int { DIM = N, DOF = N };
@@ -28,15 +28,20 @@ class Vec : public SubManifold {
         jacobian);
     jaco_mat.setIdentity();
   }
+
   std::string typeID() const override { return "Vec" + std::to_string(N); };
+
+  int dof() const override { return DOF; }
+
+  int dim() const override { return DIM; }
 };
 
 using Vec1 = Vec<1>;
 using Vec2 = Vec<2>;
 using Vec3 = Vec<3>;
-REGISTER_UNOS(SubManifold, Vec1, "Vec1");
-REGISTER_UNOS(SubManifold, Vec2, "Vec2");
-REGISTER_UNOS(SubManifold, Vec3, "Vec3");
+REGISTER_UNOS(ManifoldBase, Vec1, "Vec1");
+REGISTER_UNOS(ManifoldBase, Vec2, "Vec2");
+REGISTER_UNOS(ManifoldBase, Vec3, "Vec3");
 }  // namespace unos
 
 #endif  // UNOS_MANIFOLD_VEC_HH

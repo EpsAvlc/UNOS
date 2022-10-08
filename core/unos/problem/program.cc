@@ -2,18 +2,27 @@
 
 namespace unos {
 Program::Program()
-    : max_jacobian_size(0), num_residuals_(0), num_parameters_(0) {}
+    : max_jacobian_size_(0),
+      num_residuals_(0),
+      num_parameters_dim_(0),
+      num_parameters_dof_(0) {}
 
-void Program::addParameterBlock(double* parameters, int size
-                                /*, SubManifold* mandifold*/) {
+void Program::addParameterBlock(double* parameters, int size,
+                                ManifoldBase* manifold) {
   // TODO(caoming) : duplicate parameters check;
   ParameterBlock::Ptr new_parameter_block =
       ParameterBlock::create(parameters, size /*, nullptr*/);
-  new_parameter_block->setJacobianOffset(num_parameters_);
+  new_parameter_block->setJacobianOffset(num_parameters_dof_);
   parameter_blocks_.push_back(new_parameter_block);
   parameter_block_id_map_.insert(
       std::make_pair(parameters, parameter_block_id_map_.size()));
-  num_parameters_ += size;
+  if (manifold) {
+    num_parameters_dof_ += manifold->dof();
+  } else {
+    num_parameters_dof_ += size;
+  }
+
+  num_parameters_dim_ += size;
 }
 
 void Program::addResidualBlock(const CostFunction*  cost_function,
@@ -28,8 +37,8 @@ void Program::addResidualBlock(const CostFunction*  cost_function,
     }
     int parameter_block_id = parameter_block_id_map_[parameters[pi]];
     parameter_blocks[pi]   = parameter_blocks_[parameter_block_id];
-    std::max(max_jacobian_size, parameter_blocks_[parameter_block_id]->size() *
-                                    cost_function->getResidualSize());
+    std::max(max_jacobian_size_, parameter_blocks_[parameter_block_id]->dim() *
+                                     cost_function->getResidualSize());
   }
 
   ResidualBlock::Ptr new_residual_block =
@@ -51,23 +60,27 @@ const std::vector<typename ResidualBlock::Ptr>& Program::residualBlocks()
 
 int Program::numResiduals() const { return num_residuals_; }
 
-int Program::numParameters() const { return num_parameters_; }
+int Program::numParametersDIM() const { return num_parameters_dim_; }
+
+int Program::numParametersDOF() const { return num_parameters_dof_; }
 
 int Program::numParameterBlocks() const { return parameter_blocks_.size(); }
 
-int Program::maxJacobianSize() const { return max_jacobian_size; }
+int Program::maxJacobianSize() const { return max_jacobian_size_; }
+
+void Program::setParameterBlockConstant() {}
 
 void Program::parameterBlocksToStateVector(double* state_vector) const {
   for (auto& parameter_block_ptr : parameter_blocks_) {
     parameter_block_ptr->getState(state_vector);
-    state_vector += parameter_block_ptr->size();
+    state_vector += parameter_block_ptr->dim();
   }
 }
 
 void Program::stateVectorToParameterBlocks(double const* state_vector) const {
   for (auto& parameter_block_ptr : parameter_blocks_) {
     parameter_block_ptr->setState(state_vector);
-    state_vector += parameter_block_ptr->size();
+    state_vector += parameter_block_ptr->dim();
   }
 }
 

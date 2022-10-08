@@ -5,6 +5,7 @@
 #include <unordered_map>
 
 #include "unos/evaluator/evaluator.hh"
+#include "unos/manifold/manifold_base.hh"
 #include "unos/minimizer/minimizer.hh"
 
 namespace unos {
@@ -17,8 +18,8 @@ class Problem {
 
   Problem(const Config config = Config());
 
-  void addParameterBlock(double* parameters, int size
-                         /*, SubManifold* manifold = nullptr*/);
+  void addParameterBlock(double* parameters, int size,
+                         ManifoldBase* manifold = nullptr);
 
   void addResidualBlock(const CostFunction*  cost_function,
                         const LossFunction*  loss_function,

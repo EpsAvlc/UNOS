@@ -7,8 +7,9 @@ namespace unos {
 void TrustRegionMinimizer::init(const Options& options, double* parameters) {
   program_ptr_  = options.program_ptr;
   evalutor_ptr_ = options.evaluator_ptr;
-  x_ = Eigen::Map<Eigen::VectorXd>(parameters, program_ptr_->numParameters());
-  // TODO(caoming): create trajectory according to trust region type.
+  x_ =
+      Eigen::Map<Eigen::VectorXd>(parameters, program_ptr_->numParametersDIM());
+  // TODO(caoming): create strategy_ptr_ according to trust region type.
   strategy_ptr_ =
       TrustRegionStrategy::create(TrustRegionStrategy::Type::LevenbergMarquart);
   max_iter_num_ = options.max_iteration_num;
@@ -19,7 +20,7 @@ void TrustRegionMinimizer::minimize(const Options& options,
   init(options, parameters);
 
   TerminateCondition terminate_condition;
-  Eigen::VectorXd    delta_x(program_ptr_->numParameters());
+  Eigen::VectorXd    delta_x(program_ptr_->numParametersDOF());
   while (!isTerminated(&terminate_condition)) {
     ++iter_num_;
     Eigen::VectorXd residuals(program_ptr_->numResiduals());
@@ -34,12 +35,14 @@ void TrustRegionMinimizer::minimize(const Options& options,
       break;
     } else {
       if (isStepValid(delta_x)) {
-        x_ = x_ + delta_x;
+        Eigen::VectorXd x_plus_delta(program_ptr_->numParametersDIM());
+        evalutor_ptr_->plus(x_.data(), delta_x.data(), x_plus_delta.data());
+        x_plus_delta.swap(x_);
+
         strategy_ptr_->acceptStep(rho_);
       } else {
         strategy_ptr_->refuseStep(rho_);
       }
-      // Eigen::VectorXd x_tmp = x_ + h_lm;
     }
   }
   return;
