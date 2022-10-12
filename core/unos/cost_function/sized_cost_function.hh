@@ -5,17 +5,16 @@
 // #include <cstd
 
 namespace unos {
-template <size_t ParamSize, size_t NRes>
+template <int NRes, int... NParams>
 class SizedCostFunction : public CostFunction {
  public:
   SizedCostFunction() {
-    param_size_ = ParamSize;
-    res_size_ = NRes;
+    param_block_sizes_ = std::vector<int>{NParams...};
+    res_size_          = NRes;
   }
 
  protected:
-
 };
 };  // namespace unos
 
-#endif // UNOS_COST_FUNCTION_SIZED_COST_FUNCTION_HH
+#endif  // UNOS_COST_FUNCTION_SIZED_COST_FUNCTION_HH

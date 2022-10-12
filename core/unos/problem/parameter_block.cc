@@ -3,7 +3,8 @@
 
 namespace unos {
 
-ParameterBlock::ParameterBlock(double* data, int size, ManifoldBase* manifold) {
+ParameterBlock::ParameterBlock(double* data, int size, ManifoldBase* manifold)
+    : is_const_{false} {
   data_     = data;
   size_     = size;
   manifold_ = manifold;
@@ -30,5 +31,11 @@ int ParameterBlock::jacobianOffset() const { return jacobian_offset_; }
 
 void ParameterBlock::setJacobianOffset(const int jacobian_offset) {
   jacobian_offset_ = jacobian_offset;
+}
+
+void ParameterBlock::setConst(const bool is_const) { is_const_ = is_const; }
+
+void ParameterBlock::setManifold(ManifoldBase* manifold) {
+  manifold_ = manifold;
 }
 }  // namespace unos

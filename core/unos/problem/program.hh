@@ -2,6 +2,7 @@
 #define UNOS_PROBLME_PROGRAM_HH
 
 #include <memory>
+#include <set>
 #include <unordered_map>
 #include "unos/cost_function/cost_function.hh"
 #include "unos/loss_function/loss_function.hh"
@@ -40,15 +41,21 @@ class Program {
 
   int maxJacobianSize() const;
 
-  void setParameterBlockConstant();
+  void setParameterBlockConstant(double* parameters);
+
+  void setManifold(double* parameters, ManifoldBase* manifold);
 
   void parameterBlocksToStateVector(double* state_vector) const;
 
   void stateVectorToParameterBlocks(double const* state_vector) const;
 
+  void rearrangeParameterBlocks();
+
   SparseMatrix::UniquePtr& mutableJacobian() { return jacobian_; }
 
   SparseMatrix& Jacobian() const { return *jacobian_; }
+
+  ~Program();
 
  private:
   int                                       iter_num_;
@@ -60,6 +67,7 @@ class Program {
   std::unordered_map<double*, int>          parameter_block_id_map_;
   std::vector<typename ParameterBlock::Ptr> parameter_blocks_;
   std::vector<typename ResidualBlock::Ptr>  residual_blocks_;
+  std::set<ManifoldBase*>                   manifolds_to_release_;
 };
 };  // namespace unos
 

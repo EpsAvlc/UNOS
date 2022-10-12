@@ -13,10 +13,15 @@ class CostFunction {
 
   int getResidualSize() const { return res_size_; }
 
+  const std::vector<int>& parameterBlockSizes() const {
+    return param_block_sizes_;
+  }
+
  protected:
-  int param_size_;
-  int res_size_;
+  std::vector<int>* mutableParameterBlockSizes() { return &param_block_sizes_; }
+  std::vector<int>  param_block_sizes_;
+  int               res_size_;
 };
 };  // namespace unos
 
-#endif // UNOS_COST_FUNCTION_COST_FUNCTION_HH
+#endif  // UNOS_COST_FUNCTION_COST_FUNCTION_HH

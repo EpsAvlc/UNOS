@@ -38,6 +38,10 @@ class Problem {
 
   void optimize();
 
+  void setParameterBlockConstant(double* parameters);
+
+  void setManifold(double* paramters, ManifoldBase* manifold);
+
  private:
   void preprocess();
 

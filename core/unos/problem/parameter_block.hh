@@ -35,13 +35,20 @@ class ParameterBlock {
 
   void setJacobianOffset(const int jacobian_offset);
 
+  void setConst(const bool is_const);
+
   ManifoldBase* getManifold() { return manifold_; }
+
+  void setManifold(ManifoldBase* manifold);
+
+  bool isConst() const { return is_const_; }
 
  private:
   double*       data_;
   ManifoldBase* manifold_;
   int           size_;
   int           jacobian_offset_;
+  bool          is_const_;
 };
 
 };  // namespace unos

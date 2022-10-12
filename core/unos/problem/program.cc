@@ -30,10 +30,11 @@ void Program::addResidualBlock(const CostFunction*  cost_function,
                                double* const* const parameters,
                                int                  num_parameter_blocks) {
   std::vector<ParameterBlock::Ptr> parameter_blocks(num_parameter_blocks);
+  const std::vector<int>&          parameter_sizes =
+      cost_function->parameterBlockSizes();
   for (int pi = 0; pi < num_parameter_blocks; ++pi) {
     if (parameter_block_id_map_.count(parameters[pi]) == 0) {
-      throw(std::invalid_argument(__STR_FUNCTION__ +
-                                  " parameters has not been added."));
+      addParameterBlock(parameters[pi], parameter_sizes[pi]);
     }
     int parameter_block_id = parameter_block_id_map_[parameters[pi]];
     parameter_blocks[pi]   = parameter_blocks_[parameter_block_id];
@@ -68,10 +69,25 @@ int Program::numParameterBlocks() const { return parameter_blocks_.size(); }
 
 int Program::maxJacobianSize() const { return max_jacobian_size_; }
 
-void Program::setParameterBlockConstant() {}
+void Program::setParameterBlockConstant(double* parameters) {
+  int parameter_block_id = parameter_block_id_map_[parameters];
+  parameter_blocks_[parameter_block_id]->setConst(true);
+}
+
+void Program::setManifold(double* parameters, ManifoldBase* manifold) {
+  if (0 == parameter_block_id_map_.count(parameters)) {
+    throw(std::invalid_argument("parameters has not been added."));
+  }
+  int parameter_block_id = parameter_block_id_map_[parameters];
+  parameter_blocks_[parameter_block_id]->setManifold(manifold);
+  manifolds_to_release_.insert(manifold);
+}
 
 void Program::parameterBlocksToStateVector(double* state_vector) const {
   for (auto& parameter_block_ptr : parameter_blocks_) {
+    if (parameter_block_ptr->isConst()) {
+      continue;
+    }
     parameter_block_ptr->getState(state_vector);
     state_vector += parameter_block_ptr->dim();
   }
@@ -79,8 +95,27 @@ void Program::parameterBlocksToStateVector(double* state_vector) const {
 
 void Program::stateVectorToParameterBlocks(double const* state_vector) const {
   for (auto& parameter_block_ptr : parameter_blocks_) {
+    if (parameter_block_ptr->isConst()) {
+      continue;
+    }
     parameter_block_ptr->setState(state_vector);
     state_vector += parameter_block_ptr->dim();
+  }
+}
+
+void Program::rearrangeParameterBlocks() {
+  // num_parameters_dim_ = 0;
+  // num_parameters_dof_ = 0;
+  // for (auto& parameter_block_ptr : parameter_blocks_) {
+  //   if (parameter_block_ptr->isConst()) {
+  //     continue;
+  //   }
+  // }
+}
+
+Program::~Program() {
+  for (ManifoldBase* manifold : manifolds_to_release_) {
+    delete manifold;
   }
 }
 

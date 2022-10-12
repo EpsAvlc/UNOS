@@ -33,6 +33,15 @@ void unos::Problem::optimize() {
   minimizer_ptr_->minimize(minimizer_options, state_vec.data());
 }
 
+void unos::Problem::setParameterBlockConstant(double* parameters) {
+  program_ptr_->setParameterBlockConstant(parameters);
+}
+
+void unos::Problem::setManifold(double* paramters, ManifoldBase* manifold) {
+  program_ptr_->setManifold(paramters, manifold);
+}
+
 void unos::Problem::preprocess() {
   program_ptr_->mutableJacobian() = evaluator_ptr_->createJacobian();
+  // program_ptr_->rearra
 }

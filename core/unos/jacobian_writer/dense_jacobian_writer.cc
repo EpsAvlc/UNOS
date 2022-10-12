@@ -20,6 +20,9 @@ void DenseJacobianWriter::write(const ResidualBlock::Ptr& residual_block_ptr,
   for (size_t pi = 0; pi < residual_block_ptr->parameterBlocks().size(); ++pi) {
     const ParameterBlock::Ptr& parameter_block_ptr =
         residual_block_ptr->parameterBlocks()[pi];
+    if (parameter_block_ptr->isConst()) {
+      continue;
+    }
     int                         parameter_size = parameter_block_ptr->dof();
     Eigen::Map<Eigen::MatrixXd> jaco_ref(jacobians[pi], residual_size,
                                          parameter_size);

@@ -93,11 +93,11 @@ bool readG2oFile(const std::string&                                 filename,
     // Read whether the type is a node or a constraint.
     infile >> data_type;
     if (data_type == Pose::name()) {
-      if (!ReadVertex(&infile, poses)) {
+      if (!readVertex(&infile, poses)) {
         return false;
       }
     } else if (data_type == Constraint::name()) {
-      ReadConstraint(&infile, constraints);
+      readConstraint(&infile, constraints);
     } else {
       LOG(ERROR) << "Unknown data type: " << data_type;
       return false;
