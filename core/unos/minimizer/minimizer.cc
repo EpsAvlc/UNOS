@@ -3,10 +3,10 @@
 
 namespace unos {
 
-Minimizer::UniquePtr Minimizer::create(const Type& type) {
+Minimizer::UniquePtr Minimizer::create(const MinimizerType& type) {
   Minimizer::UniquePtr ret;
   switch (type) {
-    case TrustRegion:
+    case TRUST_REGION:
       ret.reset(new TrustRegionMinimizer);
       break;
     default:
